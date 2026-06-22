@@ -73,7 +73,6 @@
     .section-hd { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; padding-bottom:12px; border-bottom:1px solid var(--gray-border); }
     .section-hd-title { font-family:var(--font-display); font-size:18px; font-weight:700; text-transform:uppercase; color:var(--white); }
     .section-hd-sub { font-size:12px; color:var(--gray-mid); margin-top:2px; }
-    .section-hd-actions { display:flex; gap:10px; flex-wrap:wrap; }
 
     /* CONTROL PANEL */
     .control-panel { background:var(--charcoal-mid); border:1px solid var(--gray-border); padding:28px; margin-bottom:40px; }
@@ -86,11 +85,11 @@
     .time-input { background:var(--charcoal); border:1px solid rgba(255,255,255,0.15); color:var(--white); font-family:var(--font-body); font-size:13px; padding:9px 12px; width:100%; outline:none; margin-top:8px; }
     .time-input:focus { border-color:var(--scarlet); }
     .control-note { font-size:11px; color:var(--gray-mid); margin-top:8px; line-height:1.5; }
-    .btn-sm { font-family:var(--font-display); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; padding:9px 18px; border:none; cursor:pointer; transition:background 0.2s; white-space:nowrap; }
+    .btn-sm { font-family:var(--font-display); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; padding:9px 18px; border:none; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
     .btn-sm.red { background:var(--scarlet); color:var(--white); }
     .btn-sm.red:hover { background:var(--scarlet-dark); }
     .btn-sm.outline { background:transparent; color:var(--white); border:1px solid rgba(255,255,255,0.25); cursor:pointer; }
-    .btn-sm.outline:hover { border-color:var(--white); }
+    .btn-sm.outline:hover { border-color:var(--white); background:rgba(255,255,255,0.05); }
     .btn-sm.green-btn { background:var(--green); color:var(--charcoal); }
     .btn-sm.gold-btn { background:var(--gold); color:var(--charcoal); }
     .btn-stack { display:flex; flex-direction:column; gap:10px; margin-top:8px; }
@@ -117,6 +116,20 @@
     .notify-btn:disabled { opacity:0.4; cursor:not-allowed; }
     .notify-btn.sent { background:rgba(34,197,94,0.15); color:var(--green); border-color:rgba(34,197,94,0.3); cursor:default; }
 
+    /* ACTION BUTTONS IN TABLE */
+    .action-btn { font-family:var(--font-display); font-size:10px; letter-spacing:1px; text-transform:uppercase; padding:5px 12px; border:none; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+    .action-btn.edit { background:rgba(59,130,246,0.15); color:#60A5FA; border:1px solid rgba(59,130,246,0.3); }
+    .action-btn.edit:hover { background:#3B82F6; color:var(--white); }
+    .action-btn.delete { background:rgba(228,28,56,0.1); color:var(--scarlet); border:1px solid rgba(228,28,56,0.3); }
+    .action-btn.delete:hover { background:var(--scarlet); color:var(--white); }
+
+    /* INLINE EDIT ROW */
+    .inline-edit-row { background:rgba(59,130,246,0.05) !important; border-left:3px solid #3B82F6; }
+    .inline-edit-row td { padding-top:10px !important; padding-bottom:10px !important; }
+    .edit-input { background:var(--charcoal); border:1px solid rgba(59,130,246,0.4); color:var(--white); font-family:var(--font-body); font-size:13px; padding:7px 10px; width:100px; outline:none; }
+    .edit-input:focus { border-color:#3B82F6; }
+    .edit-actions { display:flex; gap:8px; align-items:center; }
+
     /* FILTER BAR */
     .filter-bar { display:flex; gap:12px; padding:16px; border-bottom:1px solid var(--gray-border); flex-wrap:wrap; align-items:center; }
     .filter-select { background:var(--charcoal); border:1px solid rgba(255,255,255,0.12); color:var(--white); font-family:var(--font-body); font-size:13px; padding:8px 12px; outline:none; min-width:160px; }
@@ -130,6 +143,30 @@
     /* SETTINGS */
     .settings-block { background:var(--charcoal-mid); border:1px solid var(--gray-border); padding:28px; margin-bottom:40px; }
     .settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; max-width:600px; }
+
+    /* MODAL */
+    .modal-overlay { display:none; position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,0.85); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:24px; }
+    .modal-overlay.open { display:flex; }
+    .modal { background:var(--charcoal-mid); border:1px solid var(--gray-border); border-top:3px solid var(--scarlet); width:100%; max-width:480px; }
+    .modal-header { padding:24px 28px 0; display:flex; justify-content:space-between; align-items:flex-start; }
+    .modal-eyebrow { font-family:var(--font-display); font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--scarlet); margin-bottom:4px; }
+    .modal-title { font-family:var(--font-display); font-size:22px; font-weight:700; text-transform:uppercase; color:var(--white); }
+    .modal-close { background:none; border:none; color:var(--gray-mid); cursor:pointer; font-size:18px; padding:4px; transition:color 0.2s; }
+    .modal-close:hover { color:var(--white); }
+    .modal-body { padding:20px 28px 28px; }
+    .modal-item-name { background:var(--charcoal); border-left:3px solid var(--scarlet); padding:12px 16px; margin-bottom:20px; font-family:var(--font-display); font-size:15px; font-weight:700; text-transform:uppercase; color:var(--white); }
+    .modal-bids-list { max-height:360px; overflow-y:auto; }
+    .bid-row { display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06); gap:12px; }
+    .bid-row:last-child { border-bottom:none; }
+    .bid-row-info { flex:1; }
+    .bid-row-name { font-size:13px; color:var(--white); font-weight:500; }
+    .bid-row-meta { font-size:11px; color:var(--gray-mid); margin-top:2px; }
+    .bid-row-amount { font-family:var(--font-display); font-size:18px; font-weight:700; margin-right:12px; }
+    .bid-row-amount.top { color:var(--gold); }
+    .bid-row-amount.other { color:var(--white); }
+    .bid-delete-btn { background:rgba(228,28,56,0.1); color:var(--scarlet); border:1px solid rgba(228,28,56,0.3); font-family:var(--font-display); font-size:10px; letter-spacing:1px; text-transform:uppercase; padding:5px 12px; cursor:pointer; transition:all 0.2s; white-space:nowrap; flex-shrink:0; }
+    .bid-delete-btn:hover { background:var(--scarlet); color:var(--white); }
+    .modal-empty { text-align:center; padding:32px; color:var(--gray-mid); font-family:var(--font-display); font-size:12px; letter-spacing:1px; }
 
     /* TOAST */
     .toast { position:fixed; bottom:28px; right:28px; z-index:9999; background:var(--charcoal-mid); border:1px solid var(--gray-border); border-left:3px solid var(--green); padding:16px 22px; max-width:360px; font-size:14px; color:var(--white); line-height:1.5; transform:translateY(100px); opacity:0; transition:all 0.4s ease; }
@@ -146,9 +183,7 @@
       .admin-nav { padding:0 16px; }
       .settings-grid { grid-template-columns:1fr; }
     }
-    @media (max-width:600px) {
-      .stat-cards { grid-template-columns:1fr; }
-    }
+    @media (max-width:600px) { .stat-cards { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
@@ -202,56 +237,80 @@
         <div class="stat-card blue"><div class="stat-card-label">Items With Bids</div><div class="stat-card-val" id="s-items-bid">—</div><div class="stat-card-sub">Of 10 total items</div></div>
       </div>
 
-      <!-- CONTROL PANEL -->
-      <div class="section-hd"><div><div class="section-hd-title">Auction Controls</div><div class="section-hd-sub">Live — changes take effect immediately for all users</div></div></div>
+      <!-- AUCTION CONTROLS -->
+      <div class="section-hd"><div><div class="section-hd-title">Auction Controls</div><div class="section-hd-sub">All changes take effect instantly for every user</div></div></div>
       <div class="control-panel">
         <div class="control-grid">
+
+          <!-- STATUS + START TIME -->
           <div>
             <div class="control-label">Auction Status</div>
             <div class="control-val" id="ctrl-status">Connecting...</div>
             <div style="font-size:12px;color:var(--gray-mid);margin-top:6px" id="ctrl-status-sub"></div>
-            <div style="margin-top:16px">
-              <div class="control-label">Current Close Time</div>
-              <div class="control-val" id="ctrl-close-time" style="font-size:15px">—</div>
+            <div style="margin-top:20px">
+              <div class="control-label">Current Open Time</div>
+              <div class="control-val" id="ctrl-open-time" style="font-size:14px;margin-bottom:12px">—</div>
+              <div class="control-label">Adjust Start Time</div>
+              <input type="datetime-local" class="time-input" id="new-open-time" />
+              <div style="margin-top:8px">
+                <button class="btn-sm red" onclick="updateOpenTime()">Update Start Time</button>
+              </div>
+              <div class="control-note">Moves the auction open time. Use to open early or delay start.</div>
             </div>
           </div>
+
+          <!-- CLOSE TIME -->
           <div>
+            <div class="control-label">Current Close Time</div>
+            <div class="control-val" id="ctrl-close-time" style="font-size:14px;margin-bottom:12px">—</div>
             <div class="control-label">Extend / Adjust Close Time</div>
-            <div style="font-size:12px;color:var(--gray-mid);margin-bottom:6px">Pick a new close time — saved instantly to Firebase for all users.</div>
             <input type="datetime-local" class="time-input" id="new-close-time" />
-            <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+            <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
               <button class="btn-sm red" onclick="updateCloseTime()">Update Close Time</button>
               <button class="btn-sm outline" onclick="addMinutes(30)">+30 min</button>
               <button class="btn-sm outline" onclick="addMinutes(60)">+1 hr</button>
             </div>
-            <div class="control-note" id="close-time-note">All bidders see the updated time immediately.</div>
+            <div class="control-note">Changes go live instantly for all bidders.</div>
           </div>
+
+          <!-- MANUAL CONTROLS -->
           <div>
             <div class="control-label">Manual Controls</div>
             <div class="btn-stack">
               <button class="btn-sm green-btn" onclick="notifyAllWinners()">📢 Notify All Winners</button>
               <button class="btn-sm red" onclick="confirmCloseNow()">🔒 Close Auction Now</button>
+              <button class="btn-sm outline" onclick="openNow()">▶ Open Auction Now</button>
               <button class="btn-sm outline" onclick="exportCSV()">⬇ Export Bids CSV</button>
             </div>
-            <div class="control-note">Notify winners sends email + SMS via Twilio/SendGrid backend.</div>
+            <div class="control-note" style="margin-top:10px">Notify winners sends email + SMS via Twilio/SendGrid.</div>
           </div>
+
         </div>
       </div>
 
-      <!-- ITEMS TABLE -->
+      <!-- ITEMS TABLE — with Edit Starting Bid + Manage Bids -->
       <div class="section-hd">
-        <div><div class="section-hd-title">Live Item Standings</div><div class="section-hd-sub">Updates in real time — no refresh needed</div></div>
+        <div><div class="section-hd-title">Live Item Standings</div><div class="section-hd-sub">Edit starting bids · Manage bids · Real-time updates</div></div>
       </div>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>#</th><th>Item</th><th>Starting</th><th>Current Bid</th>
-              <th>Bids</th><th>Leader</th><th>Email</th><th>Phone</th>
-              <th>Status</th><th>Notify</th>
+              <th>#</th>
+              <th>Item</th>
+              <th>Starting Bid</th>
+              <th>Current Bid</th>
+              <th>Bids</th>
+              <th>Leader</th>
+              <th>Phone</th>
+              <th>Status</th>
+              <th>Notify</th>
+              <th>Actions</th>
             </tr>
           </thead>
-          <tbody id="items-tbody"><tr><td colspan="10" class="empty-state">Connecting to Firebase...</td></tr></tbody>
+          <tbody id="items-tbody">
+            <tr><td colspan="10" class="empty-state">Connecting to Firebase...</td></tr>
+          </tbody>
         </table>
       </div>
 
@@ -261,15 +320,13 @@
       </div>
       <div class="table-wrap">
         <div class="filter-bar">
-          <select class="filter-select" id="filter-item" onchange="renderBidHistory()">
-            <option value="">All Items</option>
-          </select>
+          <select class="filter-select" id="filter-item" onchange="renderBidHistory()"><option value="">All Items</option></select>
           <input class="filter-input" type="text" id="filter-search" placeholder="Search by name or email..." oninput="renderBidHistory()" />
           <button class="filter-clear" onclick="clearFilters()">✕ Clear</button>
         </div>
         <table>
           <thead>
-            <tr><th>Time</th><th>Item</th><th>Bidder</th><th>Email</th><th>Phone</th><th>Company</th><th>Amount</th><th>Type</th></tr>
+            <tr><th>Time</th><th>Item</th><th>Bidder</th><th>Email</th><th>Phone</th><th>Company</th><th>Amount</th><th>Type</th><th>Delete</th></tr>
           </thead>
           <tbody id="bids-tbody"></tbody>
         </table>
@@ -304,10 +361,10 @@
         <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--gray-border)">
           <div class="form-label" style="margin-bottom:12px">Backend Integration</div>
           <div style="background:var(--charcoal);padding:16px;font-size:12px;color:var(--gray-mid);line-height:1.9;font-family:monospace">
-            Firebase Realtime DB: All bids, accounts, and close time are live-synced<br>
+            Firebase Realtime DB: All bids, accounts, and timing are live-synced across all users<br>
             Twilio SMS: Set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER<br>
             SendGrid Email: Set SENDGRID_API_KEY, FROM_EMAIL<br>
-            Deploy backend/notify.js as Node.js server → point auction pages to its URL<br>
+            Deploy backend/notify.js as Node.js server → update fetch URLs in auction.html + admin.html<br>
             Contact: Logan Holgorsen — (531) 857-2638
           </div>
         </div>
@@ -316,52 +373,81 @@
     </div>
   </div>
 
+  <!-- MANAGE BIDS MODAL -->
+  <div class="modal-overlay" id="bids-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-eyebrow">Manage Bids</div>
+          <div class="modal-title" id="bids-modal-title">Item Bids</div>
+        </div>
+        <button class="modal-close" onclick="closeBidsModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-item-name" id="bids-modal-item-name"></div>
+        <div style="font-size:12px;color:var(--gray-mid);margin-bottom:16px">
+          ★ = current leading bid. Deleting a bid cannot be undone.
+        </div>
+        <div class="modal-bids-list" id="bids-modal-list"></div>
+        <div class="modal-empty" id="bids-modal-empty" style="display:none">No bids on this item yet.</div>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST -->
   <div class="toast" id="toast"><div class="toast-title" id="toast-title">Success</div><div id="toast-msg"></div></div>
 
-  <!-- FIREBASE -->
+  <!-- FIREBASE — inline config -->
   <script>
-const FIREBASE_CONFIG = {
-  apiKey:            "AIzaSyBgWf29g_2C1JcxuyKZ55qo0eImLiY7_9M",
-  authDomain:        "huskers-auction.firebaseapp.com",
-  databaseURL:       "https://huskers-auction-default-rtdb.firebaseio.com",
-  projectId:         "huskers-auction",
-  storageBucket:     "huskers-auction.firebasestorage.app",
-  messagingSenderId: "496839822385",
-  appId:             "1:496839822385:web:07dcdb3606d3998da69910"
-};
-const AUCTION_DEFAULTS = {
-  openTime:  '2026-06-24T10:00:00.000Z',
-  closeTime: '2026-06-24T20:00:00.000Z'
-};
-</script>
+    // !! PASTE YOUR FIREBASE CONFIG HERE (same values as auction.html) !!
+    const FIREBASE_CONFIG = {
+      apiKey:            "PASTE_YOUR_API_KEY",
+      authDomain:        "PASTE_YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL:       "https://PASTE_YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+      projectId:         "PASTE_YOUR_PROJECT_ID",
+      storageBucket:     "PASTE_YOUR_PROJECT_ID.firebasestorage.app",
+      messagingSenderId: "PASTE_YOUR_SENDER_ID",
+      appId:             "PASTE_YOUR_APP_ID"
+    };
+    const AUCTION_DEFAULTS = {
+      openTime:  '2026-06-22T00:00:00.000Z',
+      closeTime: '2026-06-24T20:00:00.000Z'
+    };
+  </script>
+
   <script type="module">
-    import { initializeApp }                                      from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getDatabase, ref, onValue, set, push, get, child }  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+    import { initializeApp }                                          from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getDatabase, ref, onValue, set, push, get, child, remove } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 
     const app = initializeApp(FIREBASE_CONFIG);
     const db  = getDatabase(app);
 
-    // ── STATE ────────────────────────────────────────────────
+    // ── STATE ─────────────────────────────────────────────────
     let allBids     = {};
     let allAccounts = {};
+    let allBidKeys  = {}; // pushId → bid object (keeps Firebase keys for deletion)
     let auctionSettings = { openTime: AUCTION_DEFAULTS.openTime, closeTime: AUCTION_DEFAULTS.closeTime };
     const notifiedItems = new Set();
+    let editingItemId   = null; // tracks which item's starting bid is being edited
+    let managingItemId  = null; // tracks which item's bids modal is open
+
+    // Starting bids — admin can override these per-session; persisted to Firebase
+    let startingBids = {1:750,2:500,3:300,4:300,5:300,6:750,7:500,8:250,9:400,10:500};
 
     const AUCTION_ITEMS = [
-      {id:1, title:'Sideline Passes – Ohio State Game', startingBid:750},
-      {id:2, title:'Sideline Passes – Indiana Game', startingBid:500},
-      {id:3, title:'Corporation Facility Tour of OLC', startingBid:300},
-      {id:4, title:'Round of Golf – Firethorn', startingBid:300},
-      {id:5, title:'Round of Golf – Lost Rail', startingBid:300},
-      {id:6, title:'Day in the Life as a Husker (Fall Camp)', startingBid:750},
-      {id:7, title:'Tunnel Walk Experience', startingBid:500},
-      {id:8, title:'Autographed Football – Nebraska Players', startingBid:250},
-      {id:9, title:'Autographed Football – Matt Rhule', startingBid:400},
-      {id:10, title:'Film Study with Coaches', startingBid:500}
+      {id:1,  title:'Sideline Passes – Ohio State Game'},
+      {id:2,  title:'Sideline Passes – Indiana Game'},
+      {id:3,  title:'Corporation Facility Tour of OLC'},
+      {id:4,  title:'Round of Golf – Firethorn'},
+      {id:5,  title:'Round of Golf – Lost Rail'},
+      {id:6,  title:'Day in the Life as a Husker (Fall Camp)'},
+      {id:7,  title:'Tunnel Walk Experience'},
+      {id:8,  title:'Autographed Football – Nebraska Players'},
+      {id:9,  title:'Autographed Football – Matt Rhule'},
+      {id:10, title:'Film Study with Coaches'}
     ];
 
-    // ── ADMIN AUTH ───────────────────────────────────────────
+    // ── ADMIN AUTH ────────────────────────────────────────────
     const ADMIN_PW_KEY      = 'huskers_admin_pw';
     const ADMIN_SESSION_KEY = 'huskers_admin_session';
     function getAdminPassword() { return localStorage.getItem(ADMIN_PW_KEY) || 'Huskers2026!'; }
@@ -369,8 +455,8 @@ const AUCTION_DEFAULTS = {
     window.adminLogin = function() {
       const pw = document.getElementById('admin-password').value;
       if (pw === getAdminPassword()) {
-        localStorage.setItem(ADMIN_SESSION_KEY, 'true');
-        document.getElementById('login-screen').style.display = 'none';
+        localStorage.setItem(ADMIN_SESSION_KEY,'true');
+        document.getElementById('login-screen').style.display='none';
         document.getElementById('admin-layout').classList.add('visible');
         document.getElementById('login-err').classList.remove('visible');
         initAdmin();
@@ -378,13 +464,13 @@ const AUCTION_DEFAULTS = {
         document.getElementById('login-err').classList.add('visible');
       }
     };
-    window.adminLogout = function() { localStorage.removeItem(ADMIN_SESSION_KEY); location.reload(); };
+    window.adminLogout   = function() { localStorage.removeItem(ADMIN_SESSION_KEY); location.reload(); };
     window.changePassword = function() {
       const np=document.getElementById('new-pw').value;
       const cp=document.getElementById('confirm-pw').value;
       if (!np||np.length<6) { showToast('Error','Password must be at least 6 characters.',true); return; }
-      if (np!==cp) { showToast('Error','Passwords do not match.',true); return; }
-      localStorage.setItem(ADMIN_PW_KEY, np);
+      if (np!==cp)           { showToast('Error','Passwords do not match.',true); return; }
+      localStorage.setItem(ADMIN_PW_KEY,np);
       document.getElementById('new-pw').value=''; document.getElementById('confirm-pw').value='';
       showToast('Password Updated','Admin password changed successfully.',false);
     };
@@ -397,25 +483,31 @@ const AUCTION_DEFAULTS = {
       }
     });
 
-    // ── INIT ─────────────────────────────────────────────────
+    // ── INIT ──────────────────────────────────────────────────
     function initAdmin() {
       attachListeners();
       initFilterDropdown();
       setInterval(updateControlPanel, 5000);
     }
 
-    // ── FIREBASE LISTENERS ───────────────────────────────────
+    // ── FIREBASE LISTENERS ────────────────────────────────────
     function attachListeners() {
-      // Settings
+      // Settings (open + close time, starting bids)
       onValue(ref(db,'auction/settings'), snap => {
-        if (snap.exists()) auctionSettings = { ...auctionSettings, ...snap.val() };
+        if (snap.exists()) {
+          const s = snap.val();
+          auctionSettings = { ...auctionSettings, ...s };
+          if (s.startingBids) startingBids = { ...startingBids, ...s.startingBids };
+        }
         updateControlPanel();
       });
 
-      // Bids
+      // Bids — keep full key map for deletion
       onValue(ref(db,'auction/bids'), snap => {
-        allBids = snap.exists() ? snap.val() : {};
+        allBidKeys = snap.exists() ? snap.val() : {};
+        allBids    = allBidKeys;
         renderStats(); renderItemsTable(); renderBidHistory();
+        if (managingItemId) renderBidsModal(managingItemId);
         document.getElementById('live-indicator').style.display = 'flex';
       });
 
@@ -426,12 +518,18 @@ const AUCTION_DEFAULTS = {
       });
     }
 
-    // ── HELPERS ──────────────────────────────────────────────
+    // ── HELPERS ───────────────────────────────────────────────
     function getItemBids(itemId) { return Object.values(allBids).filter(b=>b.itemId===itemId); }
+    function getItemBidEntries(itemId) {
+      return Object.entries(allBidKeys)
+        .filter(([,b])=>b.itemId===itemId)
+        .sort((a,b)=>b[1].amount-a[1].amount);
+    }
     function getTopBid(itemId) {
       const bids=getItemBids(itemId);
       return bids.length ? bids.reduce((m,b)=>b.amount>m.amount?b:m,bids[0]) : null;
     }
+    function getStartingBid(itemId) { return startingBids[itemId] || 0; }
     function getAuctionClose() { return new Date(auctionSettings.closeTime); }
     function getAuctionOpen()  { return new Date(auctionSettings.openTime); }
     function isAuctionEnded()  { return new Date()>=getAuctionClose(); }
@@ -439,27 +537,29 @@ const AUCTION_DEFAULTS = {
       return d.toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short'});
     }
 
-    // ── STATS ────────────────────────────────────────────────
+    // ── STATS ─────────────────────────────────────────────────
     function renderStats() {
       const bids = Object.values(allBids);
-      const uniqueEmails = [...new Set(bids.map(b=>b.bidderEmail))].length;
-      const leaderVal = AUCTION_ITEMS.reduce((s,item)=>{ const t=getTopBid(item.id); return s+(t?t.amount:0); },0);
-      const itemsWithBids = AUCTION_ITEMS.filter(item=>getItemBids(item.id).length>0).length;
-      document.getElementById('s-total-bids').textContent  = bids.length;
-      document.getElementById('s-leader-val').textContent  = '$'+leaderVal.toLocaleString();
-      document.getElementById('s-bidders').textContent     = uniqueEmails;
-      document.getElementById('s-items-bid').textContent   = itemsWithBids+'/10';
+      const uniqueEmails   = [...new Set(bids.map(b=>b.bidderEmail))].length;
+      const leaderVal      = AUCTION_ITEMS.reduce((s,item)=>{ const t=getTopBid(item.id); return s+(t?t.amount:0); },0);
+      const itemsWithBids  = AUCTION_ITEMS.filter(item=>getItemBids(item.id).length>0).length;
+      document.getElementById('s-total-bids').textContent = bids.length;
+      document.getElementById('s-leader-val').textContent = '$'+leaderVal.toLocaleString();
+      document.getElementById('s-bidders').textContent    = uniqueEmails;
+      document.getElementById('s-items-bid').textContent  = itemsWithBids+'/10';
     }
 
-    // ── CONTROL PANEL ────────────────────────────────────────
+    // ── CONTROL PANEL ─────────────────────────────────────────
     function updateControlPanel() {
       const now   = new Date();
       const close = getAuctionClose();
       const open  = getAuctionOpen();
-      const statusEl = document.getElementById('ctrl-status');
-      const subEl    = document.getElementById('ctrl-status-sub');
-      const closeEl  = document.getElementById('ctrl-close-time');
+      const statusEl  = document.getElementById('ctrl-status');
+      const subEl     = document.getElementById('ctrl-status-sub');
+      const closeEl   = document.getElementById('ctrl-close-time');
+      const openEl    = document.getElementById('ctrl-open-time');
       if(closeEl) closeEl.textContent = formatDateTime(close);
+      if(openEl)  openEl.textContent  = formatDateTime(open);
       if (now<open) {
         statusEl.className='control-val gold'; statusEl.textContent='Opens Soon';
         if(subEl) subEl.textContent='Opens '+formatDateTime(open);
@@ -473,6 +573,20 @@ const AUCTION_DEFAULTS = {
       }
     }
 
+    // ── TIMING CONTROLS ───────────────────────────────────────
+    window.updateOpenTime = async function() {
+      const input = document.getElementById('new-open-time').value;
+      if (!input) { showToast('Error','Please select a date and time.',true); return; }
+      const newDate = new Date(input);
+      if (isNaN(newDate.getTime())) { showToast('Error','Invalid date/time.',true); return; }
+      try {
+        await set(ref(db,'auction/settings/openTime'), newDate.toISOString());
+        document.getElementById('new-open-time').value='';
+        showToast('Start Time Updated','Auction will now open at '+formatDateTime(newDate),false);
+        updateControlPanel();
+      } catch(e) { showToast('Error','Could not update start time: '+e.message,true); }
+    };
+
     window.updateCloseTime = async function() {
       const input = document.getElementById('new-close-time').value;
       if (!input) { showToast('Error','Please select a date and time.',true); return; }
@@ -482,20 +596,19 @@ const AUCTION_DEFAULTS = {
       try {
         await set(ref(db,'auction/settings/closeTime'), newDate.toISOString());
         document.getElementById('new-close-time').value='';
-        showToast('Close Time Updated','All bidders now see the new close time: '+formatDateTime(newDate),false);
+        showToast('Close Time Updated','Closes at '+formatDateTime(newDate),false);
         updateControlPanel();
       } catch(e) { showToast('Error','Could not update close time: '+e.message,true); }
     };
 
     window.addMinutes = async function(mins) {
-      const current = getAuctionClose();
-      const newDate = new Date(current.getTime() + mins*60000);
+      const newDate = new Date(getAuctionClose().getTime() + mins*60000);
       if (newDate<=new Date()) { showToast('Error','Resulting time is in the past.',true); return; }
       try {
         await set(ref(db,'auction/settings/closeTime'), newDate.toISOString());
         showToast('Time Extended','+'+mins+' min — closes at '+formatDateTime(newDate),false);
         updateControlPanel();
-      } catch(e) { showToast('Error','Could not extend time: '+e.message,true); }
+      } catch(e) { showToast('Error',e.message,true); }
     };
 
     window.confirmCloseNow = async function() {
@@ -508,14 +621,25 @@ const AUCTION_DEFAULTS = {
       } catch(e) { showToast('Error',e.message,true); }
     };
 
-    // ── ITEMS TABLE ──────────────────────────────────────────
+    window.openNow = async function() {
+      if (!confirm('Set the auction open time to RIGHT NOW?')) return;
+      const now=new Date(); now.setSeconds(now.getSeconds()-1);
+      try {
+        await set(ref(db,'auction/settings/openTime'), now.toISOString());
+        showToast('Auction Opened','The auction is now live.',false);
+        updateControlPanel(); renderItemsTable();
+      } catch(e) { showToast('Error',e.message,true); }
+    };
+
+    // ── ITEMS TABLE ───────────────────────────────────────────
     function renderItemsTable() {
       const tbody  = document.getElementById('items-tbody');
       const closed = isAuctionEnded();
       tbody.innerHTML = AUCTION_ITEMS.map(item => {
-        const topBid = getTopBid(item.id);
-        const bids   = getItemBids(item.id);
-        const currentPrice = topBid ? topBid.amount : item.startingBid;
+        const topBid      = getTopBid(item.id);
+        const bids        = getItemBids(item.id);
+        const startingBid = getStartingBid(item.id);
+        const currentPrice= topBid ? topBid.amount : startingBid;
         const leaderName  = topBid ? topBid.bidderFirstName+' '+topBid.bidderLastName : '—';
         const leaderEmail = topBid ? topBid.bidderEmail : '—';
         const leaderPhone = topBid ? topBid.bidderPhone : '—';
@@ -523,15 +647,33 @@ const AUCTION_DEFAULTS = {
         if (closed && topBid) statusBadge=`<span class="badge badge-winner">Winner Set</span>`;
         else if (topBid)      statusBadge=`<span class="badge badge-active">Has Bids</span>`;
         else                  statusBadge=`<span class="badge badge-no-bids">No Bids</span>`;
-        const alreadySent    = notifiedItems.has(item.id);
-        const notifyDisabled = !topBid ? 'disabled' : '';
-        const notifyClass    = alreadySent ? 'notify-btn sent' : 'notify-btn';
-        const notifyLabel    = alreadySent ? '✓ Notified' : 'Notify Winner';
+        const alreadySent   = notifiedItems.has(item.id);
+        const notifyDisabled= !topBid ? 'disabled' : '';
+        const notifyClass   = alreadySent ? 'notify-btn sent' : 'notify-btn';
+        const notifyLabel   = alreadySent ? '✓ Notified' : 'Notify';
+
+        // If this item is being edited, show inline edit row
+        if (editingItemId === item.id) {
+          return `
+            <tr class="inline-edit-row">
+              <td style="color:var(--scarlet);font-family:var(--font-display);font-weight:700">${item.id}</td>
+              <td class="td-item">${item.title}</td>
+              <td colspan="8">
+                <div class="edit-actions">
+                  <span style="font-size:12px;color:var(--gray-mid);margin-right:4px">New starting bid: $</span>
+                  <input class="edit-input" type="number" id="edit-bid-${item.id}" value="${startingBid}" min="0" step="25" />
+                  <button class="btn-sm red" onclick="saveStartingBid(${item.id})">Save</button>
+                  <button class="btn-sm outline" onclick="cancelEdit()">Cancel</button>
+                </div>
+              </td>
+            </tr>`;
+        }
+
         return `
           <tr>
             <td style="color:var(--scarlet);font-family:var(--font-display);font-weight:700">${item.id}</td>
             <td class="td-item">${item.title}</td>
-            <td style="color:var(--gray-mid);font-family:var(--font-display)">$${item.startingBid.toLocaleString()}</td>
+            <td style="color:var(--gray-mid);font-family:var(--font-display)">$${startingBid.toLocaleString()}</td>
             <td class="td-price" style="color:${topBid?'var(--gold)':'var(--gray-mid)'}">$${currentPrice.toLocaleString()}</td>
             <td style="color:var(--gray-mid)">${bids.length}</td>
             <td>
@@ -541,11 +683,109 @@ const AUCTION_DEFAULTS = {
             <td style="font-size:12px;color:var(--gray-mid)">${leaderPhone}</td>
             <td>${statusBadge}</td>
             <td><button class="${notifyClass}" onclick="notifyWinner(${item.id})" ${notifyDisabled}>${notifyLabel}</button></td>
+            <td>
+              <div style="display:flex;gap:6px">
+                <button class="action-btn edit" onclick="startEditStartingBid(${item.id})" title="Edit starting bid">✏ Bid</button>
+                <button class="action-btn delete" onclick="openBidsModal(${item.id})" title="Manage / delete bids">🗑 Bids</button>
+              </div>
+            </td>
           </tr>`;
       }).join('');
     }
 
-    // ── BID HISTORY ──────────────────────────────────────────
+    // ── EDIT STARTING BID ─────────────────────────────────────
+    window.startEditStartingBid = function(itemId) {
+      editingItemId = itemId;
+      renderItemsTable();
+      setTimeout(()=>{
+        const inp = document.getElementById('edit-bid-'+itemId);
+        if(inp) { inp.focus(); inp.select(); }
+      }, 50);
+    };
+
+    window.cancelEdit = function() {
+      editingItemId = null;
+      renderItemsTable();
+    };
+
+    window.saveStartingBid = async function(itemId) {
+      const inp = document.getElementById('edit-bid-'+itemId);
+      const val = parseInt(inp ? inp.value : 0);
+      if (isNaN(val) || val < 0) { showToast('Error','Please enter a valid amount.',true); return; }
+
+      // Check: new starting bid can't be below existing top bid
+      const topBid = getTopBid(itemId);
+      if (topBid && val > topBid.amount) {
+        showToast('Error','Starting bid cannot exceed the current leading bid of $'+topBid.amount.toLocaleString()+'.',true);
+        return;
+      }
+
+      try {
+        await set(ref(db,'auction/settings/startingBids/'+itemId), val);
+        startingBids[itemId] = val;
+        editingItemId = null;
+        renderItemsTable();
+        showToast('Starting Bid Updated','Item #'+itemId+' starting bid set to $'+val.toLocaleString()+'.',false);
+      } catch(e) { showToast('Error','Could not save: '+e.message,true); }
+    };
+
+    // ── MANAGE BIDS MODAL ─────────────────────────────────────
+    window.openBidsModal = function(itemId) {
+      managingItemId = itemId;
+      const item = AUCTION_ITEMS.find(i=>i.id===itemId);
+      document.getElementById('bids-modal-title').textContent = 'Item #'+itemId;
+      document.getElementById('bids-modal-item-name').textContent = item ? item.title : '';
+      renderBidsModal(itemId);
+      document.getElementById('bids-modal').classList.add('open');
+      document.body.style.overflow='hidden';
+    };
+
+    window.closeBidsModal = function() {
+      managingItemId = null;
+      document.getElementById('bids-modal').classList.remove('open');
+      document.body.style.overflow='';
+    };
+
+    document.getElementById('bids-modal').addEventListener('click', e => {
+      if (e.target === document.getElementById('bids-modal')) window.closeBidsModal();
+    });
+
+    function renderBidsModal(itemId) {
+      const listEl  = document.getElementById('bids-modal-list');
+      const emptyEl = document.getElementById('bids-modal-empty');
+      const entries = getItemBidEntries(itemId); // sorted highest first
+
+      if (!entries.length) {
+        listEl.innerHTML=''; emptyEl.style.display='block'; return;
+      }
+      emptyEl.style.display='none';
+
+      listEl.innerHTML = entries.map(([key, bid], idx) => {
+        const isTop  = idx === 0;
+        const d      = new Date(bid.timestamp);
+        const timeStr= d.toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+        return `
+          <div class="bid-row">
+            <div class="bid-row-info">
+              <div class="bid-row-name">${bid.bidderFirstName} ${bid.bidderLastName} ${isTop?'<span style="color:var(--gold);font-size:11px">★ Leading</span>':''}</div>
+              <div class="bid-row-meta">${bid.bidderEmail} · ${bid.bidderPhone||'—'} · ${timeStr}</div>
+            </div>
+            <div class="bid-row-amount ${isTop?'top':'other'}">$${bid.amount.toLocaleString()}</div>
+            <button class="bid-delete-btn" onclick="deleteBid('${key}', ${itemId}, ${bid.amount}, '${bid.bidderFirstName} ${bid.bidderLastName}')">Delete</button>
+          </div>`;
+      }).join('');
+    }
+
+    window.deleteBid = async function(key, itemId, amount, bidderName) {
+      if (!confirm('Delete $'+amount.toLocaleString()+' bid from '+bidderName+'? This cannot be undone.')) return;
+      try {
+        await remove(ref(db,'auction/bids/'+key));
+        showToast('Bid Deleted','$'+amount.toLocaleString()+' bid from '+bidderName+' has been removed.',false);
+        // modal re-renders automatically via the onValue listener
+      } catch(e) { showToast('Error','Could not delete bid: '+e.message,true); }
+    };
+
+    // ── BID HISTORY TABLE ─────────────────────────────────────
     function initFilterDropdown() {
       const sel=document.getElementById('filter-item');
       AUCTION_ITEMS.forEach(item=>{
@@ -555,24 +795,24 @@ const AUCTION_DEFAULTS = {
     }
 
     function renderBidHistory() {
-      const tbody   = document.getElementById('bids-tbody');
-      const noMsg   = document.getElementById('no-bids-msg');
+      const tbody      = document.getElementById('bids-tbody');
+      const noMsg      = document.getElementById('no-bids-msg');
       const filterItem = document.getElementById('filter-item').value;
-      const search  = document.getElementById('filter-search').value.toLowerCase();
-      let bids = Object.values(allBids).sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
-      if (filterItem) bids = bids.filter(b=>b.itemId===parseInt(filterItem));
-      if (search)     bids = bids.filter(b=>
+      const search     = document.getElementById('filter-search').value.toLowerCase();
+      let entries = Object.entries(allBidKeys).sort((a,b)=>new Date(b[1].timestamp)-new Date(a[1].timestamp));
+      if (filterItem) entries = entries.filter(([,b])=>b.itemId===parseInt(filterItem));
+      if (search)     entries = entries.filter(([,b])=>
         (b.bidderFirstName+' '+b.bidderLastName).toLowerCase().includes(search)||
         b.bidderEmail.toLowerCase().includes(search)
       );
-      if (!bids.length) { tbody.innerHTML=''; noMsg.style.display='block'; return; }
+      if (!entries.length) { tbody.innerHTML=''; noMsg.style.display='block'; return; }
       noMsg.style.display='none';
-      tbody.innerHTML = bids.map(bid=>{
+      tbody.innerHTML = entries.map(([key, bid])=>{
         const item   = AUCTION_ITEMS.find(i=>i.id===bid.itemId);
         const d      = new Date(bid.timestamp);
         const timeStr= d.toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
-        const top    = getTopBid(bid.itemId);
-        const isTop  = top && top.timestamp===bid.timestamp && top.amount===bid.amount;
+        const topBid = getTopBid(bid.itemId);
+        const isTop  = topBid && topBid.amount===bid.amount && topBid.bidderEmail===bid.bidderEmail;
         return `
           <tr>
             <td style="font-size:12px;color:var(--gray-mid)">${timeStr}</td>
@@ -585,6 +825,9 @@ const AUCTION_DEFAULTS = {
               $${bid.amount.toLocaleString()} ${isTop?'★':''}
             </td>
             <td><span class="badge ${bid.type==='account'?'badge-account':'badge-no-bids'}">${bid.type||'guest'}</span></td>
+            <td>
+              <button class="action-btn delete" onclick="deleteBid('${key}',${bid.itemId},${bid.amount},'${bid.bidderFirstName} ${bid.bidderLastName}')">Delete</button>
+            </td>
           </tr>`;
       }).join('');
     }
@@ -595,11 +838,11 @@ const AUCTION_DEFAULTS = {
       renderBidHistory();
     };
 
-    // ── ACCOUNTS ─────────────────────────────────────────────
+    // ── ACCOUNTS ──────────────────────────────────────────────
     function renderAccounts() {
-      const tbody  = document.getElementById('accounts-tbody');
-      const noMsg  = document.getElementById('no-accounts-msg');
-      const accts  = Object.values(allAccounts);
+      const tbody = document.getElementById('accounts-tbody');
+      const noMsg = document.getElementById('no-accounts-msg');
+      const accts = Object.values(allAccounts);
       if (!accts.length) { tbody.innerHTML=''; noMsg.style.display='block'; return; }
       noMsg.style.display='none';
       const bids = Object.values(allBids);
@@ -613,11 +856,10 @@ const AUCTION_DEFAULTS = {
           <td style="font-family:var(--font-display);color:var(--scarlet)">
             ${bids.filter(b=>b.bidderEmail===a.email).length}
           </td>
-        </tr>`
-      ).join('');
+        </tr>`).join('');
     }
 
-    // ── WINNER NOTIFICATIONS ─────────────────────────────────
+    // ── WINNER NOTIFICATIONS ──────────────────────────────────
     window.notifyWinner = async function(itemId) {
       const item   = AUCTION_ITEMS.find(i=>i.id===itemId);
       const topBid = getTopBid(itemId);
@@ -628,13 +870,11 @@ const AUCTION_DEFAULTS = {
           method:'POST', headers:{'Content-Type':'application/json'},
           body:JSON.stringify({toEmail:topBid.bidderEmail,toPhone:topBid.bidderPhone,firstName:topBid.bidderFirstName,lastName:topBid.bidderLastName,itemTitle:item.title,winningBid:topBid.amount})
         });
-        notifiedItems.add(itemId);
-        renderItemsTable();
+        notifiedItems.add(itemId); renderItemsTable();
         showToast('Winner Notified',topBid.bidderFirstName+' notified at '+topBid.bidderEmail,false);
       } catch(e) {
-        notifiedItems.add(itemId);
-        renderItemsTable();
-        showToast('Backend Required','Deploy notify.js to send real messages. Winner: '+topBid.bidderFirstName+' — '+topBid.bidderEmail,true);
+        notifiedItems.add(itemId); renderItemsTable();
+        showToast('Backend Required','Deploy notify.js. Winner: '+topBid.bidderFirstName+' — '+topBid.bidderEmail,true);
       }
     };
 
@@ -648,13 +888,13 @@ const AUCTION_DEFAULTS = {
       showToast('All Winners Notified',count+' notification'+(count!==1?'s':'')+' sent.',false);
     };
 
-    // ── CSV EXPORT ───────────────────────────────────────────
+    // ── CSV EXPORT ────────────────────────────────────────────
     window.exportCSV = function() {
       const bids=Object.values(allBids).sort((a,b)=>a.itemId-b.itemId||(b.amount-a.amount));
-      const rows=[['Item ID','Item Title','Amount','First','Last','Email','Phone','Company','Address','Type','Timestamp']];
+      const rows=[['Item ID','Item Title','Starting Bid','Amount','First','Last','Email','Phone','Company','Address','Type','Timestamp']];
       bids.forEach(b=>{
         const item=AUCTION_ITEMS.find(i=>i.id===b.itemId);
-        rows.push([b.itemId,item?item.title:'#'+b.itemId,b.amount,b.bidderFirstName,b.bidderLastName,b.bidderEmail,b.bidderPhone||'',b.bidderCompany||'',b.bidderAddress||'',b.type||'guest',b.timestamp]);
+        rows.push([b.itemId,item?item.title:'#'+b.itemId,getStartingBid(b.itemId),b.amount,b.bidderFirstName,b.bidderLastName,b.bidderEmail,b.bidderPhone||'',b.bidderCompany||'',b.bidderAddress||'',b.type||'guest',b.timestamp]);
       });
       const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
       const blob=new Blob([csv],{type:'text/csv'});
@@ -662,10 +902,10 @@ const AUCTION_DEFAULTS = {
       const a=document.createElement('a'); a.href=url;
       a.download='nebraska_auction_bids_'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
       URL.revokeObjectURL(url);
-      showToast('CSV Exported','Bid data downloaded successfully.',false);
+      showToast('CSV Exported','Bid data downloaded.',false);
     };
 
-    // ── TOAST ────────────────────────────────────────────────
+    // ── TOAST ─────────────────────────────────────────────────
     function showToast(title,msg,isErr) {
       const el=document.getElementById('toast');
       document.getElementById('toast-title').textContent=title;
