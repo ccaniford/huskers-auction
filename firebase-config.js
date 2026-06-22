@@ -9,6 +9,6 @@ const FIREBASE_CONFIG = {
 };
 
 const AUCTION_DEFAULTS = {
-  openTime:  '2026-06-22T10:00:00.000Z',
+  openTime:  '2026-06-24T10:00:00.000Z',
   closeTime: '2026-06-24T20:00:00.000Z'
 };
