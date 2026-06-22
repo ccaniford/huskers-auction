@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Silent Auction | Nebraska Football</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --scarlet: #E41C38; --scarlet-dark: #B01228;
+      --charcoal: #1A1A1A; --charcoal-mid: #242424; --charcoal-light: #2E2E2E;
+      --white: #FFFFFF; --gray-mid: #9A9A9A; --gray-border: rgba(255,255,255,0.1);
+      --green: #22C55E; --gold: #D4A843;
+      --font-display: 'Oswald', sans-serif; --font-body: 'Inter', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--charcoal); color: var(--white); overflow-x: hidden; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(26,26,26,0.97); backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--scarlet);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 68px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+    .nav-logo-n {
+      width: 44px; height: 44px; background: var(--scarlet);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--white);
+      clip-path: polygon(8% 0%, 92% 0%, 100% 100%, 0% 100%);
+    }
+    .nav-wordmark { font-family: var(--font-display); font-size: 15px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--white); line-height: 1.2; }
+    .nav-wordmark span { display: block; color: var(--scarlet); font-size: 11px; letter-spacing: 3px; }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-user-badge {
+      display: none; align-items: center; gap: 8px;
+      background: rgba(228,28,56,0.15); border: 1px solid rgba(228,28,56,0.3);
+      padding: 6px 14px;
+      font-family: var(--font-display); font-size: 12px; letter-spacing: 1px; color: var(--scarlet);
+    }
+    .nav-user-badge.visible { display: flex; }
+    .nav-logout { font-family: var(--font-display); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray-mid); background: none; border: none; cursor: pointer; transition: color 0.2s; }
+    .nav-logout:hover { color: var(--scarlet); }
+    .nav-back { font-family: var(--font-display); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray-mid); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
+    .nav-back:hover { color: var(--white); }
+
+    /* CONNECTING OVERLAY */
+    .db-connecting {
+      position: fixed; inset: 0; z-index: 9999;
+      background: var(--charcoal);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+    }
+    .db-connecting.hidden { display: none; }
+    .spinner { width: 44px; height: 44px; border: 3px solid rgba(228,28,56,0.2); border-top-color: var(--scarlet); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .db-connecting-text { font-family: var(--font-display); font-size: 13px; letter-spacing: 3px; text-transform: uppercase; color: var(--gray-mid); }
+    .db-error-msg { font-size: 13px; color: var(--scarlet); text-align: center; max-width: 400px; line-height: 1.6; display: none; }
+    .db-error-msg.visible { display: block; }
+
+    /* AUCTION HERO */
+    .auction-hero { padding-top: 68px; background: linear-gradient(180deg, #1a0508 0%, var(--charcoal) 100%); border-bottom: 1px solid rgba(228,28,56,0.2); }
+    .auction-hero-inner {
+      max-width: 1200px; margin: 0 auto; padding: 56px 40px 48px;
+      display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px;
+    }
+    .auction-eyebrow { font-family: var(--font-display); font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--scarlet); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+    .auction-eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--scarlet); }
+    .auction-hero-title { font-family: var(--font-display); font-size: clamp(36px, 6vw, 68px); font-weight: 700; text-transform: uppercase; line-height: 0.95; letter-spacing: -1px; color: var(--white); }
+    .auction-hero-title span { color: var(--scarlet); }
+    .auction-hero-meta { margin-top: 16px; font-size: 13px; color: var(--gray-mid); line-height: 1.6; }
+    .auction-hero-right { text-align: right; }
+    .auction-status { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: blink 1.4s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .status-dot.closed { background: var(--gray-mid); animation: none; }
+    .timer-label { font-family: var(--font-display); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gray-mid); margin-bottom: 6px; }
+    .timer-digits { font-family: var(--font-display); font-size: 40px; font-weight: 700; color: var(--white); letter-spacing: 2px; line-height: 1; }
+    .timer-digits span { color: var(--scarlet); }
+    .timer-closed-msg { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--scarlet); letter-spacing: 1px; text-transform: uppercase; }
+
+    /* LIVE PULSE (shown when a new bid lands) */
+    .live-pulse {
+      position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+      z-index: 500; background: var(--scarlet); color: var(--white);
+      font-family: var(--font-display); font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+      padding: 10px 28px; display: flex; align-items: center; gap: 10px;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+    }
+    .live-pulse.show { opacity: 1; }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--white); animation: blink 0.8s ease-in-out infinite; }
+
+    /* MAIN */
+    .auction-main { max-width: 1200px; margin: 0 auto; padding: 48px 40px; }
+
+    /* AUTH BAR */
+    .auth-bar {
+      background: var(--charcoal-mid); border: 1px solid var(--gray-border); border-left: 3px solid var(--scarlet);
+      padding: 18px 24px; margin-bottom: 40px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+    }
+    .auth-bar-text { font-size: 14px; color: rgba(255,255,255,0.7); }
+    .auth-bar-text strong { color: var(--white); }
+    .auth-bar-actions { display: flex; gap: 10px; }
+    .btn-sm-red { background: var(--scarlet); color: var(--white); font-family: var(--font-display); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; padding: 9px 20px; border: none; cursor: pointer; transition: background 0.2s; clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%); }
+    .btn-sm-red:hover { background: var(--scarlet-dark); }
+    .btn-sm-outline { background: transparent; color: var(--white); font-family: var(--font-display); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 20px; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; transition: border-color 0.2s; }
+    .btn-sm-outline:hover { border-color: var(--white); }
+
+    /* CLOSED BANNER */
+    .auction-closed-banner { background: rgba(228,28,56,0.08); border: 1px solid rgba(228,28,56,0.3); padding: 24px; margin-bottom: 32px; text-align: center; display: none; }
+    .auction-closed-banner.visible { display: block; }
+    .auction-closed-banner h3 { font-family: var(--font-display); font-size: 22px; font-weight: 700; text-transform: uppercase; color: var(--scarlet); margin-bottom: 8px; }
+    .auction-closed-banner p { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+    .auction-closed-banner a { color: var(--scarlet); }
+
+    /* ITEMS GRID */
+    .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+    .item-card { background: var(--charcoal-mid); border: 1px solid var(--gray-border); position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.2s; }
+    .item-card:hover { border-color: rgba(228,28,56,0.4); transform: translateY(-2px); }
+    .item-card.bid-flash { animation: bidFlash 0.7s ease; }
+    @keyframes bidFlash { 0%,100%{border-color:rgba(228,28,56,0.4)} 50%{border-color:var(--scarlet); box-shadow: 0 0 18px rgba(228,28,56,0.35);} }
+
+    .item-card-img { width: 100%; height: 200px; background: var(--charcoal-light); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+    .item-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .item-card-img .img-placeholder { font-family: var(--font-display); font-size: 48px; font-weight: 700; color: rgba(228,28,56,0.2); }
+    .item-num { position: absolute; top: 12px; left: 12px; background: var(--scarlet); color: var(--white); font-family: var(--font-display); font-size: 11px; letter-spacing: 1px; font-weight: 600; padding: 4px 10px; }
+
+    .item-card-body { padding: 24px; }
+    .item-category { font-family: var(--font-display); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--scarlet); margin-bottom: 6px; }
+    .item-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; text-transform: uppercase; color: var(--white); line-height: 1.15; margin-bottom: 10px; }
+    .item-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; margin-bottom: 20px; }
+    .item-bid-row { display: flex; align-items: flex-end; justify-content: space-between; border-top: 1px solid var(--gray-border); padding-top: 18px; }
+    .item-bid-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray-mid); margin-bottom: 2px; }
+    .item-bid-amount { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--white); line-height: 1; transition: color 0.4s; }
+    .item-bid-amount.updated { color: var(--green); }
+    .item-bid-count { font-size: 11px; color: var(--gray-mid); margin-top: 3px; }
+    .btn-bid { background: var(--scarlet); color: var(--white); font-family: var(--font-display); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; padding: 12px 24px; border: none; cursor: pointer; transition: background 0.2s; clip-path: polygon(5px 0%, 100% 0%, calc(100% - 5px) 100%, 0% 100%); white-space: nowrap; }
+    .btn-bid:hover { background: var(--scarlet-dark); }
+    .btn-bid:disabled { background: var(--charcoal-light); color: var(--gray-mid); cursor: not-allowed; clip-path: none; }
+    .item-winner-badge { display: none; background: var(--green); color: var(--white); font-family: var(--font-display); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 6px 14px; margin-top: 12px; text-align: center; }
+    .item-winner-badge.visible { display: block; }
+
+    /* MODALS */
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 24px; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--charcoal-mid); border: 1px solid var(--gray-border); border-top: 3px solid var(--scarlet); width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; position: relative; }
+    .modal-header { padding: 28px 32px 0; display: flex; justify-content: space-between; align-items: flex-start; }
+    .modal-title-eyebrow { font-family: var(--font-display); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--scarlet); margin-bottom: 6px; }
+    .modal-title { font-family: var(--font-display); font-size: 24px; font-weight: 700; text-transform: uppercase; color: var(--white); line-height: 1.1; }
+    .modal-close { background: none; border: none; color: var(--gray-mid); cursor: pointer; font-size: 20px; line-height: 1; padding: 4px; transition: color 0.2s; flex-shrink: 0; }
+    .modal-close:hover { color: var(--white); }
+    .modal-body { padding: 24px 32px 32px; }
+    .modal-tabs { display: flex; border-bottom: 1px solid var(--gray-border); margin-bottom: 24px; }
+    .modal-tab { font-family: var(--font-display); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray-mid); background: none; border: none; cursor: pointer; padding: 12px 20px 12px 0; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s; }
+    .modal-tab.active { color: var(--white); border-bottom-color: var(--scarlet); }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* FORMS */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .form-row.single { grid-template-columns: 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-family: var(--font-display); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray-mid); }
+    .form-input { background: var(--charcoal); border: 1px solid rgba(255,255,255,0.12); color: var(--white); font-family: var(--font-body); font-size: 14px; padding: 11px 14px; outline: none; transition: border-color 0.2s; }
+    .form-input:focus { border-color: var(--scarlet); }
+    .form-input::placeholder { color: rgba(255,255,255,0.25); }
+    .form-error { font-size: 11px; color: #ff6b6b; margin-top: -8px; margin-bottom: 4px; display: none; }
+    .form-error.visible { display: block; }
+    .form-submit { width: 100%; background: var(--scarlet); color: var(--white); font-family: var(--font-display); font-size: 14px; letter-spacing: 2px; text-transform: uppercase; padding: 15px; border: none; cursor: pointer; transition: background 0.2s; margin-top: 8px; clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%); }
+    .form-submit:hover { background: var(--scarlet-dark); }
+    .form-submit:disabled { background: var(--charcoal-light); color: var(--gray-mid); cursor: not-allowed; clip-path: none; }
+    .form-note { font-size: 12px; color: var(--gray-mid); text-align: center; margin-top: 14px; line-height: 1.5; }
+    .form-note a { color: var(--scarlet); cursor: pointer; }
+
+    /* BID MODAL */
+    .bid-item-preview { background: var(--charcoal); padding: 16px; margin-bottom: 24px; border-left: 3px solid var(--scarlet); }
+    .bid-item-name { font-family: var(--font-display); font-size: 16px; font-weight: 700; text-transform: uppercase; color: var(--white); }
+    .bid-item-current { font-size: 13px; color: var(--gray-mid); margin-top: 4px; }
+    .bid-item-current span { color: var(--white); font-weight: 600; }
+    .bid-amount-row { display: flex; gap: 12px; margin-bottom: 20px; }
+    .bid-preset { flex: 1; background: var(--charcoal); border: 1px solid rgba(255,255,255,0.12); color: var(--white); font-family: var(--font-display); font-size: 13px; font-weight: 600; padding: 12px 6px; cursor: pointer; text-align: center; transition: all 0.2s; }
+    .bid-preset:hover, .bid-preset.active { background: var(--scarlet); border-color: var(--scarlet); }
+    .bid-min-note { font-size: 12px; color: var(--gray-mid); margin-bottom: 16px; }
+    .bid-min-note strong { color: var(--gold); }
+
+    /* GUEST SECTION DIVIDER */
+    .guest-divider { border-top: 1px solid var(--gray-border); padding-top: 20px; margin-bottom: 20px; }
+    .guest-section-label { font-family: var(--font-display); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--scarlet); margin-bottom: 16px; }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 28px; right: 28px; z-index: 9999; background: var(--charcoal-mid); border: 1px solid var(--gray-border); border-left: 3px solid var(--green); padding: 16px 22px; max-width: 340px; font-size: 14px; color: var(--white); line-height: 1.5; transform: translateY(100px); opacity: 0; transition: all 0.4s ease; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { border-left-color: var(--scarlet); }
+    .toast-title { font-family: var(--font-display); font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--green); margin-bottom: 4px; }
+    .toast.error .toast-title { color: var(--scarlet); }
+
+    /* FOOTER */
+    footer { background: #111; border-top: 2px solid var(--scarlet); padding: 48px 40px 32px; text-align: center; margin-top: 80px; }
+    .footer-logo { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--white); margin-bottom: 8px; }
+    .footer-logo span { color: var(--scarlet); }
+    .footer-sub { font-size: 12px; color: var(--gray-mid); margin-bottom: 16px; letter-spacing: 1px; }
+    .footer-contact { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.8; }
+    .footer-contact a { color: var(--scarlet); text-decoration: none; }
+    .footer-divider { width: 60px; height: 2px; background: var(--scarlet); margin: 24px auto; }
+    .footer-copy { font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: 1px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .auction-hero-inner { padding: 40px 20px 32px; flex-direction: column; align-items: flex-start; }
+      .auction-hero-right { text-align: left; }
+      .auction-main { padding: 32px 20px; }
+      .items-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .modal-header, .modal-body { padding-left: 20px; padding-right: 20px; }
+      footer { padding: 40px 20px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CONNECTING OVERLAY -->
+  <div class="db-connecting" id="db-connecting">
+    <div class="spinner"></div>
+    <div class="db-connecting-text">Connecting to Live Auction</div>
+    <div class="db-error-msg" id="db-error-msg">
+      Could not connect to the live auction database.<br>
+      Please check your internet connection and refresh.
+    </div>
+  </div>
+
+  <!-- LIVE BID PULSE -->
+  <div class="live-pulse" id="live-pulse">
+    <div class="live-dot"></div>
+    <span id="live-pulse-text">New bid placed</span>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-n">N</div>
+      <div class="nav-wordmark">Nebraska <span>Silent Auction</span></div>
+    </a>
+    <div class="nav-right">
+      <div class="nav-user-badge" id="nav-user-badge">
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span id="nav-user-name"></span>
+      </div>
+      <button class="nav-logout" id="nav-logout" style="display:none" onclick="logout()">Sign Out</button>
+      <a href="index.html" class="nav-back">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Home
+      </a>
+    </div>
+  </nav>
+
+  <!-- AUCTION HERO -->
+  <div class="auction-hero">
+    <div class="auction-hero-inner">
+      <div class="auction-hero-left">
+        <div class="auction-eyebrow">Matt Rhule Football Camps LLC</div>
+        <h1 class="auction-hero-title">Silent <span>Auction</span></h1>
+        <div class="auction-hero-meta">
+          June 24, 2026 · Opens 5:00 AM CT · Closes 3:00 PM CT<br>
+          10 exclusive Husker experiences &amp; memorabilia items
+        </div>
+      </div>
+      <div class="auction-hero-right">
+        <div class="auction-status">
+          <div class="status-dot" id="status-dot"></div>
+          <span id="status-text" style="font-family:var(--font-display);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-mid);">Loading...</span>
+        </div>
+        <div>
+          <div class="timer-label" id="timer-label">Closes In</div>
+          <div class="timer-digits" id="timer-digits">
+            <span id="t-h">--</span>:<span id="t-m">--</span>:<span id="t-s">--</span>
+          </div>
+          <div class="timer-closed-msg" id="timer-closed" style="display:none">Auction Closed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="auction-main">
+    <div class="auth-bar" id="auth-bar">
+      <div class="auth-bar-text"><strong>Sign in</strong> to bid faster, or continue as a guest.</div>
+      <div class="auth-bar-actions">
+        <button class="btn-sm-red" onclick="openModal('auth-modal','login')">Sign In</button>
+        <button class="btn-sm-outline" onclick="openModal('auth-modal','register')">Create Account</button>
+      </div>
+    </div>
+    <div class="auction-closed-banner" id="closed-banner">
+      <h3>🏈 Auction Has Closed</h3>
+      <p>Thank you to all bidders! Winners have been notified via email and text message.<br>
+      To make payment, contact <strong>Logan Holgorsen</strong> at <a href="tel:5318572638">(531) 857-2638</a>.<br>
+      Checks payable to: <strong>Matt Rhule Football Camps LLC</strong></p>
+    </div>
+    <div class="items-grid" id="items-grid"></div>
+  </main>
+
+  <footer>
+    <div class="footer-logo">Nebraska <span>Football</span></div>
+    <div class="footer-sub">Matt Rhule Football Camps LLC · Silent Auction 2026</div>
+    <div class="footer-contact">
+      Questions or payment: <a href="tel:5318572638">(531) 857-2638</a> — Logan Holgorsen<br>
+      Checks payable to: <strong>Matt Rhule Football Camps LLC</strong>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-copy">© 2026 Nebraska Football · All Rights Reserved</div>
+  </footer>
+
+  <!-- AUTH MODAL -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title-eyebrow">Nebraska Football Auction</div>
+          <div class="modal-title" id="auth-modal-title">Your Account</div>
+        </div>
+        <button class="modal-close" onclick="closeModal('auth-modal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-tabs">
+          <button class="modal-tab" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
+          <button class="modal-tab" id="tab-register" onclick="switchAuthTab('register')">Create Account</button>
+        </div>
+        <!-- LOGIN -->
+        <div class="tab-pane" id="pane-login">
+          <div class="form-row single"><div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input class="form-input" type="email" id="login-email" placeholder="yourname@email.com" />
+          </div></div>
+          <div class="form-row single"><div class="form-group">
+            <label class="form-label">Password</label>
+            <input class="form-input" type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleLogin()" />
+          </div></div>
+          <div class="form-error" id="login-error">Invalid email or password. Please try again.</div>
+          <button class="form-submit" id="login-btn" onclick="handleLogin()">Sign In</button>
+          <div class="form-note">Don't have an account? <a onclick="switchAuthTab('register')">Create one here</a></div>
+        </div>
+        <!-- REGISTER -->
+        <div class="tab-pane" id="pane-register">
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">First Name *</label><input class="form-input" type="text" id="reg-first" placeholder="John" /></div>
+            <div class="form-group"><label class="form-label">Last Name *</label><input class="form-input" type="text" id="reg-last" placeholder="Smith" /></div>
+          </div>
+          <div class="form-row single"><div class="form-group"><label class="form-label">Email Address *</label><input class="form-input" type="email" id="reg-email" placeholder="yourname@email.com" /></div></div>
+          <div class="form-row single"><div class="form-group"><label class="form-label">Phone Number *</label><input class="form-input" type="tel" id="reg-phone" placeholder="(555) 555-5555" /></div></div>
+          <div class="form-row single"><div class="form-group"><label class="form-label">Address *</label><input class="form-input" type="text" id="reg-address" placeholder="123 Main St, Lincoln, NE 68502" /></div></div>
+          <div class="form-row single"><div class="form-group"><label class="form-label">Company Name</label><input class="form-input" type="text" id="reg-company" placeholder="Company (optional)" /></div></div>
+          <div class="form-row single"><div class="form-group"><label class="form-label">Password *</label><input class="form-input" type="password" id="reg-password" placeholder="Create a password" /></div></div>
+          <div class="form-error" id="reg-error"></div>
+          <button class="form-submit" id="register-btn" onclick="handleRegister()">Create Account &amp; Bid</button>
+          <div class="form-note">Already have an account? <a onclick="switchAuthTab('login')">Sign in here</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BID MODAL -->
+  <div class="modal-overlay" id="bid-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title-eyebrow">Place Your Bid</div>
+          <div class="modal-title" id="bid-modal-title">Item</div>
+        </div>
+        <button class="modal-close" onclick="closeModal('bid-modal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="bid-item-preview">
+          <div class="bid-item-name" id="bid-preview-name"></div>
+          <div class="bid-item-current">Current bid: <span id="bid-preview-current">$0</span> &nbsp;|&nbsp; <span id="bid-preview-count">0 bids</span></div>
+        </div>
+        <div class="bid-min-note">Minimum bid: <strong id="bid-min-display">$0</strong> &nbsp;(increments of $50)</div>
+        <div class="bid-amount-row" id="bid-presets"></div>
+        <div class="form-row single" style="margin-bottom:20px">
+          <div class="form-group">
+            <label class="form-label">Custom Bid Amount ($)</label>
+            <input class="form-input" type="number" id="bid-amount-input" placeholder="Enter amount" min="0" step="50" />
+          </div>
+        </div>
+        <!-- GUEST FIELDS -->
+        <div id="guest-fields" style="display:none">
+          <div class="guest-divider">
+            <div class="guest-section-label">Your Information</div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">First Name *</label><input class="form-input" type="text" id="g-first" /></div>
+              <div class="form-group"><label class="form-label">Last Name *</label><input class="form-input" type="text" id="g-last" /></div>
+            </div>
+            <div class="form-row single"><div class="form-group"><label class="form-label">Email *</label><input class="form-input" type="email" id="g-email" /></div></div>
+            <div class="form-row single"><div class="form-group"><label class="form-label">Phone *</label><input class="form-input" type="tel" id="g-phone" /></div></div>
+            <div class="form-row single"><div class="form-group"><label class="form-label">Address *</label><input class="form-input" type="text" id="g-address" /></div></div>
+            <div class="form-row single"><div class="form-group"><label class="form-label">Company Name</label><input class="form-input" type="text" id="g-company" /></div></div>
+          </div>
+        </div>
+        <div class="form-error" id="bid-error"></div>
+        <button class="form-submit" id="submit-bid-btn" onclick="submitBid()">Confirm Bid</button>
+        <div class="form-note" id="bid-modal-note"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <div class="toast-title" id="toast-title">Success</div>
+    <div id="toast-msg"></div>
+  </div>
+
+  <!-- FIREBASE SDK -->
+  <script src="firebase-config.js"></script>
+  <script type="module">
+    import { initializeApp }                          from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getDatabase, ref, onValue, push, set, get, child }
+                                                      from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
+    // ── INIT ────────────────────────────────────────────────
+    const app = initializeApp(FIREBASE_CONFIG);
+    const db  = getDatabase(app);
+
+    // ── STATE ───────────────────────────────────────────────
+    let allBids    = {};   // { pushId: bidObject } — live from Firebase
+    let auctionSettings = { openTime: AUCTION_DEFAULTS.openTime, closeTime: AUCTION_DEFAULTS.closeTime };
+    let activeBidItemId = null;
+    let dbReady = false;
+
+    // ── ITEM DEFINITIONS ────────────────────────────────────
+    const AUCTION_ITEMS = [
+      { id:1,  category:'VIP Experience',     title:'Sideline Passes – Ohio State Game',        startingBid:750,  image:'https://huskers.com/images/2024/11/2/Nebraska_vs_Ohio_State_2024.jpg', desc:'Stand where the Huskers stand. These two sideline passes for the Ohio State game put you on the field during pregame warmups, right in the action for one of the biggest Big Ten matchups of the season. Experience the tunnel walk from the sideline, hear the roar of 90,000 fans, and get an unobstructed view of every play. Passes include field access and a commemorative lanyard.' },
+      { id:2,  category:'VIP Experience',     title:'Sideline Passes – Indiana Game',           startingBid:500,  image:'https://huskers.com/images/2024/9/28/Nebraska_vs_Indiana_2024.jpg',  desc:'Get up close to Big Ten football at Memorial Stadium. Two sideline passes for the Indiana matchup give you access to the field during warmups and the full game experience from the sideline. Feel the energy of the Husker faithful from the best seat in the house. Passes include field access and a commemorative credential.' },
+      { id:3,  category:'Behind the Scenes',  title:'Corporation Facility Tour of OLC',         startingBid:300,  image:'https://huskers.com/images/2022/7/20/athlFacilitiesMain.jpg',          desc:'Go behind the curtain of one of college football\'s elite facilities. This exclusive guided tour of the Osborne Football Complex takes you through the locker rooms, weight room, film rooms, and recruiting spaces that fuel Nebraska Football. A rare look at the infrastructure powering one of the most storied programs in college football history.' },
+      { id:4,  category:'Golf Experience',    title:'Round of Golf – Firethorn',                startingBid:300,  image:'', desc:'Tee it up at Firethorn Golf Club, one of Lincoln\'s premier private courses. This package includes a round of golf for one, with cart, at the acclaimed Firethorn course. Known for its challenging layout and immaculate conditions, Firethorn is a bucket-list course for Nebraska golfers. A perfect way to combine Nebraska Football pride with an exceptional day on the links.' },
+      { id:5,  category:'Golf Experience',    title:'Round of Golf – Lost Rail',                startingBid:300,  image:'', desc:'Play the acclaimed Lost Rail Golf Course, a stunning links-style layout in the Nebraska Sandhills. This package includes a round of golf for one at one of the most unique and highly regarded courses in the Midwest. With natural terrain, sweeping views, and a truly one-of-a-kind experience, a round at Lost Rail is a memory that lasts long after the 18th hole.' },
+      { id:6,  category:'Ultimate Access',    title:'Day in the Life as a Husker (Fall Camp)',  startingBid:750,  image:'https://huskers.com/images/2024/8/9/nebraska_football_practice_2024_0042.jpg', desc:'Live the dream — spend a day inside Nebraska Football Fall Camp. Shadow the coaching staff, observe position group drills, watch competitive team periods, and experience the intensity and brotherhood that defines Husker football. Includes a behind-the-scenes look at how a Big Ten program prepares for a season and a personalized Husker gear package.' },
+      { id:7,  category:'Game Day Experience',title:'Tunnel Walk Experience',                   startingBid:500,  image:'https://huskers.com/images/2023/8/31/tunnel_walk.jpg',                desc:'Walk the walk — literally. This exclusive package puts you and a guest inside the iconic Nebraska Tunnel Walk before kickoff. Feel the electricity of 90,000 fans building to a fever pitch as you walk the path from the locker room to the field alongside the team. One of the most electric pre-game experiences in all of college football.' },
+      { id:8,  category:'Memorabilia',        title:'Autographed Football – Nebraska Players',  startingBid:250,  image:'https://huskers.com/images/2024/8/14/nebraska_football_2024.jpg',      desc:'Own a piece of Husker history. This official NCAA football is autographed by multiple Nebraska Football players — a true collector\'s item. The ball comes authenticated with individual signatures and is display-ready. Show your Nebraska pride with one of the most treasured pieces of Husker memorabilia available.' },
+      { id:9,  category:'Memorabilia',        title:'Autographed Football – Matt Rhule',        startingBid:400,  image:'https://huskers.com/images/2023/12/5/matt_rhule_nebraska.jpg',         desc:'A rare personal autograph from Head Coach Matt Rhule on an official NCAA football. Coach Rhule personally signed this ball — a collector\'s piece that captures a defining era of Nebraska Football. Authenticated and display-ready. The perfect centerpiece for any Husker fan\'s collection.' },
+      { id:10, category:'Behind the Scenes',  title:'Film Study with Coaches',                  startingBid:500,  image:'https://huskers.com/images/2024/8/9/nebraska_football_practice_2024_0121.jpg', desc:'Pull up a chair in the same film room where Big Ten games are won. Spend time with Nebraska Football coaches reviewing actual game film — the formations, adjustments, and decisions that define modern college football. You\'ll walk away with an insider\'s understanding of how elite coaches break down opponents and prepare their players.' }
+    ];
+
+    // ── HELPERS ─────────────────────────────────────────────
+    function emailToKey(email) { return email.toLowerCase().replace(/\./g, ','); }
+    function keyToEmail(key)   { return key.replace(/,/g, '.'); }
+
+    function getItemBids(itemId) {
+      return Object.values(allBids).filter(b => b.itemId === itemId);
+    }
+    function getTopBid(itemId) {
+      const bids = getItemBids(itemId);
+      if (!bids.length) return null;
+      return bids.reduce((m,b) => b.amount > m.amount ? b : m, bids[0]);
+    }
+    function getItemCurrentPrice(item) {
+      const top = getTopBid(item.id);
+      return top ? top.amount : item.startingBid;
+    }
+
+    // Auction timing
+    function getAuctionClose() { return new Date(auctionSettings.closeTime); }
+    function getAuctionOpen()  { return new Date(auctionSettings.openTime);  }
+    function isAuctionOpen()   { const n=new Date(); return n>=getAuctionOpen() && n<getAuctionClose(); }
+    function isAuctionEnded()  { return new Date() >= getAuctionClose(); }
+    function isAuctionSoon()   { return new Date() < getAuctionOpen(); }
+
+    // ── FIREBASE LISTENERS ───────────────────────────────────
+    function attachListeners() {
+      // Settings (close time)
+      onValue(ref(db, 'auction/settings'), snap => {
+        if (snap.exists()) {
+          auctionSettings = { ...auctionSettings, ...snap.val() };
+        }
+      });
+
+      // Bids — real-time live feed
+      onValue(ref(db, 'auction/bids'), snap => {
+        const prevBids = { ...allBids };
+        allBids = snap.exists() ? snap.val() : {};
+
+        // Detect new bids (for flash + pulse)
+        if (dbReady) {
+          const newKeys = Object.keys(allBids).filter(k => !prevBids[k]);
+          if (newKeys.length) {
+            newKeys.forEach(k => {
+              const bid = allBids[k];
+              flashCard(bid.itemId);
+            });
+            const latestBid = allBids[newKeys[newKeys.length-1]];
+            const item = AUCTION_ITEMS.find(i => i.id === latestBid.itemId);
+            showLivePulse(item ? item.title : 'an item', latestBid.amount);
+          }
+        }
+
+        renderItems();
+        if (!dbReady) {
+          dbReady = true;
+          document.getElementById('db-connecting').classList.add('hidden');
+        }
+      }, err => {
+        console.error('Firebase error:', err);
+        document.getElementById('db-error-msg').classList.add('visible');
+        // Still hide spinner, show page with localStorage fallback note
+        document.getElementById('db-connecting').classList.add('hidden');
+      });
+    }
+
+    // ── TIMER ───────────────────────────────────────────────
+    function updateTimer() {
+      const now   = new Date();
+      const close = getAuctionClose();
+      const open  = getAuctionOpen();
+      const hEl   = document.getElementById('t-h');
+      const mEl   = document.getElementById('t-m');
+      const sEl   = document.getElementById('t-s');
+      const digEl = document.getElementById('timer-digits');
+      const closedEl = document.getElementById('timer-closed');
+      const labelEl  = document.getElementById('timer-label');
+      const dotEl    = document.getElementById('status-dot');
+      const statusEl = document.getElementById('status-text');
+      const closedBanner = document.getElementById('closed-banner');
+
+      if (isAuctionSoon()) {
+        const diff = open - now;
+        const h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+        hEl.textContent=String(h).padStart(2,'0'); mEl.textContent=String(m).padStart(2,'0'); sEl.textContent=String(s).padStart(2,'0');
+        if(labelEl) labelEl.textContent='Opens In';
+        if(dotEl) { dotEl.classList.remove('closed'); dotEl.style.background='var(--gold)'; }
+        if(statusEl) statusEl.textContent='Opens Soon';
+        return;
+      }
+      if (isAuctionEnded()) {
+        if(digEl) digEl.style.display='none';
+        if(closedEl) closedEl.style.display='block';
+        if(dotEl) dotEl.classList.add('closed');
+        if(statusEl) statusEl.textContent='Auction Closed';
+        if(closedBanner) closedBanner.classList.add('visible');
+        return;
+      }
+      const diff = close - now;
+      const h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+      hEl.textContent=String(h).padStart(2,'0'); mEl.textContent=String(m).padStart(2,'0'); sEl.textContent=String(s).padStart(2,'0');
+      if(labelEl) labelEl.textContent='Closes In';
+      if(dotEl) { dotEl.classList.remove('closed'); dotEl.style.background='var(--green)'; }
+      if(statusEl) statusEl.textContent='Auction Live';
+    }
+    setInterval(updateTimer, 1000);
+    updateTimer();
+
+    // ── AUTH ─────────────────────────────────────────────────
+    const SESSION_KEY = 'huskers_session';
+    const GUEST_KEY   = 'huskers_guest';
+
+    function getSession() { try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch{ return null; } }
+    function getGuestData() { try { return JSON.parse(localStorage.getItem(GUEST_KEY)); } catch{ return null; } }
+
+    function setSession(user) { localStorage.setItem(SESSION_KEY, JSON.stringify(user)); updateAuthUI(); }
+    window.logout = function() { localStorage.removeItem(SESSION_KEY); updateAuthUI(); };
+
+    function updateAuthUI() {
+      const session = getSession();
+      const authBar  = document.getElementById('auth-bar');
+      const navBadge = document.getElementById('nav-user-badge');
+      const navLogout= document.getElementById('nav-logout');
+      const navName  = document.getElementById('nav-user-name');
+      if (session) {
+        if(authBar)  authBar.style.display = 'none';
+        if(navBadge) navBadge.classList.add('visible');
+        if(navName)  navName.textContent = session.firstName + ' ' + session.lastName;
+        if(navLogout) navLogout.style.display = 'block';
+      } else {
+        if(authBar)  authBar.style.display = 'flex';
+        if(navBadge) navBadge.classList.remove('visible');
+        if(navLogout) navLogout.style.display = 'none';
+      }
+      renderItems();
+    }
+
+    window.handleLogin = async function() {
+      const email    = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      const errEl    = document.getElementById('login-error');
+      const btn      = document.getElementById('login-btn');
+
+      btn.disabled = true; btn.textContent = 'Signing In...';
+      errEl.classList.remove('visible');
+
+      try {
+        const snap = await get(child(ref(db), 'auction/accounts/' + emailToKey(email)));
+        if (!snap.exists()) { errEl.classList.add('visible'); btn.disabled=false; btn.textContent='Sign In'; return; }
+        const user = snap.val();
+        if (user.password !== password) { errEl.classList.add('visible'); btn.disabled=false; btn.textContent='Sign In'; return; }
+        setSession(user);
+        closeModal('auth-modal');
+        showToast('Welcome back, ' + user.firstName + '!', 'You\'re signed in and ready to bid.', false);
+      } catch(e) {
+        errEl.textContent = 'Connection error. Please try again.';
+        errEl.classList.add('visible');
+      }
+      btn.disabled=false; btn.textContent='Sign In';
+    };
+
+    window.handleRegister = async function() {
+      const first   = document.getElementById('reg-first').value.trim();
+      const last    = document.getElementById('reg-last').value.trim();
+      const email   = document.getElementById('reg-email').value.trim();
+      const phone   = document.getElementById('reg-phone').value.trim();
+      const address = document.getElementById('reg-address').value.trim();
+      const company = document.getElementById('reg-company').value.trim();
+      const password= document.getElementById('reg-password').value;
+      const errEl   = document.getElementById('reg-error');
+      const btn     = document.getElementById('register-btn');
+
+      if (!first||!last||!email||!phone||!address||!password) {
+        errEl.textContent='Please fill out all required fields.'; errEl.classList.add('visible'); return;
+      }
+
+      btn.disabled=true; btn.textContent='Creating Account...';
+      errEl.classList.remove('visible');
+
+      try {
+        const existing = await get(child(ref(db), 'auction/accounts/' + emailToKey(email)));
+        if (existing.exists()) {
+          errEl.textContent='An account with this email already exists.'; errEl.classList.add('visible');
+          btn.disabled=false; btn.textContent='Create Account & Bid'; return;
+        }
+        const user = { firstName:first, lastName:last, email, phone, address, company, password };
+        await set(ref(db, 'auction/accounts/' + emailToKey(email)), user);
+        setSession(user);
+        errEl.classList.remove('visible');
+        closeModal('auth-modal');
+        showToast('Account Created!', 'Welcome, ' + first + '! You\'re ready to bid.', false);
+      } catch(e) {
+        errEl.textContent='Connection error. Please try again.'; errEl.classList.add('visible');
+      }
+      btn.disabled=false; btn.textContent='Create Account & Bid';
+    };
+
+    // ── RENDER ITEMS ─────────────────────────────────────────
+    function renderItems() {
+      const grid = document.getElementById('items-grid');
+      if (!grid) return;
+      const auctionEnded = isAuctionEnded();
+      const auctionOpen  = isAuctionOpen();
+      const session = getSession();
+
+      grid.innerHTML = AUCTION_ITEMS.map(item => {
+        const bids = getItemBids(item.id);
+        const topBid = getTopBid(item.id);
+        const currentPrice = getItemCurrentPrice(item);
+        const isWinner = auctionEnded && topBid && session && topBid.bidderEmail === session.email;
+
+        const imgContent = item.image
+          ? `<img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'img-placeholder\\'>N</div>'">`
+          : `<div class="img-placeholder">N</div>`;
+
+        let bidBtn;
+        if (auctionEnded)      bidBtn = `<button class="btn-bid" disabled>Auction Closed</button>`;
+        else if (!auctionOpen) bidBtn = `<button class="btn-bid" disabled>Opens Soon</button>`;
+        else                   bidBtn = `<button class="btn-bid" onclick="window.openBidModal(${item.id})">Place Bid</button>`;
+
+        return `
+          <div class="item-card" id="card-${item.id}">
+            <div class="item-card-img">${imgContent}<div class="item-num">#${item.id}</div></div>
+            <div class="item-card-body">
+              <div class="item-category">${item.category}</div>
+              <div class="item-title">${item.title}</div>
+              <div class="item-desc">${item.desc}</div>
+              <div class="item-bid-row">
+                <div>
+                  <div class="item-bid-label">${bids.length>0 ? 'Current Bid' : 'Starting Bid'}</div>
+                  <div class="item-bid-amount" id="price-${item.id}">$${currentPrice.toLocaleString()}</div>
+                  <div class="item-bid-count" id="count-${item.id}">${bids.length} bid${bids.length!==1?'s':''}</div>
+                </div>
+                ${bidBtn}
+              </div>
+              ${isWinner ? `<div class="item-winner-badge visible">🏆 You Won This Item!</div>` : ''}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ── LIVE PULSE / FLASH ───────────────────────────────────
+    function flashCard(itemId) {
+      const card = document.getElementById('card-' + itemId);
+      if (!card) return;
+      card.classList.remove('bid-flash');
+      void card.offsetWidth;
+      card.classList.add('bid-flash');
+    }
+
+    let pulseTimeout;
+    function showLivePulse(itemTitle, amount) {
+      const el = document.getElementById('live-pulse');
+      document.getElementById('live-pulse-text').textContent =
+        'New bid: $' + Number(amount).toLocaleString() + ' on ' + itemTitle;
+      el.classList.add('show');
+      clearTimeout(pulseTimeout);
+      pulseTimeout = setTimeout(() => el.classList.remove('show'), 3500);
+    }
+
+    // ── BID MODAL ────────────────────────────────────────────
+    window.openBidModal = function(itemId) {
+      if (!isAuctionOpen()) { showToast('Auction Not Active', 'Bidding is only available during the auction window.', true); return; }
+      activeBidItemId = itemId;
+      const item = AUCTION_ITEMS.find(i => i.id === itemId);
+      const currentPrice = getItemCurrentPrice(item);
+      const bids = getItemBids(itemId);
+      const minBid = currentPrice + 50;
+      const session = getSession();
+      const guestData = getGuestData();
+
+      document.getElementById('bid-modal-title').textContent = 'Item #' + item.id;
+      document.getElementById('bid-preview-name').textContent = item.title;
+      document.getElementById('bid-preview-current').textContent = '$' + currentPrice.toLocaleString();
+      document.getElementById('bid-preview-count').textContent = bids.length + ' bid' + (bids.length!==1?'s':'');
+      document.getElementById('bid-min-display').textContent = '$' + minBid.toLocaleString();
+      document.getElementById('bid-amount-input').value = '';
+      document.getElementById('bid-amount-input').min = minBid;
+      document.getElementById('bid-error').classList.remove('visible');
+      document.getElementById('bid-error').textContent = '';
+
+      document.getElementById('bid-presets').innerHTML =
+        [minBid, minBid+50, minBid+150].map(amt =>
+          `<button class="bid-preset" onclick="selectPreset(${amt})">${'$'+amt.toLocaleString()}</button>`
+        ).join('');
+
+      const guestFieldsEl = document.getElementById('guest-fields');
+      const noteEl = document.getElementById('bid-modal-note');
+      if (session) {
+        guestFieldsEl.style.display = 'none';
+        noteEl.textContent = 'Bidding as ' + session.firstName + ' ' + session.lastName + ' (' + session.email + ')';
+      } else if (guestData) {
+        guestFieldsEl.style.display = 'none';
+        noteEl.innerHTML = 'Bidding as guest: <strong>' + guestData.firstName + ' ' + guestData.lastName + '</strong>. <a onclick="window.clearGuestAndShowFields()" style="color:var(--scarlet);cursor:pointer">Not you?</a>';
+      } else {
+        guestFieldsEl.style.display = 'block';
+        noteEl.innerHTML = 'Want to save your bids? <a onclick="openModal(\'auth-modal\',\'register\')" style="color:var(--scarlet);cursor:pointer">Create a free account</a>';
+      }
+      openModal('bid-modal');
+    };
+
+    window.selectPreset = function(amt) {
+      document.querySelectorAll('.bid-preset').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('bid-amount-input').value = amt;
+    };
+
+    window.clearGuestAndShowFields = function() {
+      localStorage.removeItem(GUEST_KEY);
+      document.getElementById('guest-fields').style.display = 'block';
+      document.getElementById('bid-modal-note').innerHTML =
+        'Want to save your info? <a onclick="openModal(\'auth-modal\',\'register\')" style="color:var(--scarlet);cursor:pointer">Create an account</a>';
+    };
+
+    window.submitBid = async function() {
+      const errEl = document.getElementById('bid-error');
+      const btn   = document.getElementById('submit-bid-btn');
+      errEl.classList.remove('visible');
+
+      const item = AUCTION_ITEMS.find(i => i.id === activeBidItemId);
+      if (!item) return;
+
+      const currentPrice = getItemCurrentPrice(item);
+      const minBid  = currentPrice + 50;
+      const inputVal = parseFloat(document.getElementById('bid-amount-input').value);
+
+      if (isNaN(inputVal) || inputVal < minBid) {
+        errEl.textContent = 'Minimum bid is $' + minBid.toLocaleString() + ' (current + $50 increment).';
+        errEl.classList.add('visible'); return;
+      }
+
+      const session = getSession();
+      let bidderInfo;
+
+      if (session) {
+        bidderInfo = { firstName:session.firstName, lastName:session.lastName, email:session.email, phone:session.phone, address:session.address, company:session.company, type:'account' };
+      } else {
+        const guestData = getGuestData();
+        if (guestData) {
+          bidderInfo = { ...guestData, type:'guest' };
+        } else {
+          const first=document.getElementById('g-first').value.trim();
+          const last =document.getElementById('g-last').value.trim();
+          const email=document.getElementById('g-email').value.trim();
+          const phone=document.getElementById('g-phone').value.trim();
+          const address=document.getElementById('g-address').value.trim();
+          const company=document.getElementById('g-company').value.trim();
+          if (!first||!last||!email||!phone||!address) {
+            errEl.textContent='Please fill out all required fields.'; errEl.classList.add('visible'); return;
+          }
+          bidderInfo = { firstName:first, lastName:last, email, phone, address, company, type:'guest' };
+          localStorage.setItem(GUEST_KEY, JSON.stringify(bidderInfo));
+        }
+      }
+
+      // Re-check top bid live right before writing
+      const freshSnap = await get(ref(db, 'auction/bids'));
+      const freshBids = freshSnap.exists() ? Object.values(freshSnap.val()) : [];
+      const freshItemBids = freshBids.filter(b => b.itemId === activeBidItemId);
+      const freshTop = freshItemBids.length ? freshItemBids.reduce((m,b) => b.amount>m.amount?b:m, freshItemBids[0]) : null;
+
+      if (freshTop && freshTop.bidderEmail === bidderInfo.email) {
+        errEl.textContent = 'You already have the highest bid on this item!';
+        errEl.classList.add('visible'); return;
+      }
+      if (freshTop && inputVal < freshTop.amount + 50) {
+        errEl.textContent = 'Someone just outbid you. Minimum is now $' + (freshTop.amount+50).toLocaleString() + '.';
+        errEl.classList.add('visible'); return;
+      }
+
+      btn.disabled = true; btn.textContent = 'Placing Bid...';
+
+      try {
+        const newBid = {
+          itemId: activeBidItemId, itemTitle: item.title,
+          amount: inputVal,
+          bidderEmail: bidderInfo.email, bidderPhone: bidderInfo.phone || '',
+          bidderFirstName: bidderInfo.firstName, bidderLastName: bidderInfo.lastName,
+          bidderAddress: bidderInfo.address || '', bidderCompany: bidderInfo.company || '',
+          type: bidderInfo.type, timestamp: new Date().toISOString()
+        };
+        await push(ref(db, 'auction/bids'), newBid);
+
+        // Outbid notification
+        if (freshTop && freshTop.bidderEmail !== bidderInfo.email) {
+          sendOutbidNotification(freshTop, item, inputVal);
+        }
+
+        closeModal('bid-modal');
+        showToast('Bid Placed!', 'Your bid of $' + inputVal.toLocaleString() + ' on "' + item.title + '" is live.', false);
+      } catch(e) {
+        errEl.textContent = 'Failed to place bid. Please check your connection and try again.';
+        errEl.classList.add('visible');
+      }
+      btn.disabled=false; btn.textContent='Confirm Bid';
+    };
+
+    // ── NOTIFICATIONS ────────────────────────────────────────
+    async function sendOutbidNotification(outbidBid, item, newAmount) {
+      try {
+        await fetch('/api/notify-outbid', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ toEmail:outbidBid.bidderEmail, toPhone:outbidBid.bidderPhone, firstName:outbidBid.bidderFirstName, itemTitle:item.title, yourBid:outbidBid.amount, newHighBid:newAmount })
+        });
+      } catch(e) { console.log('Outbid notify (backend required):', e.message); }
+    }
+
+    // ── MODAL HELPERS ────────────────────────────────────────
+    window.openModal = function(id, tab) {
+      document.getElementById(id).classList.add('open');
+      document.body.style.overflow = 'hidden';
+      if (tab && id === 'auth-modal') window.switchAuthTab(tab);
+    };
+    window.closeModal = function(id) {
+      document.getElementById(id).classList.remove('open');
+      document.body.style.overflow = '';
+    };
+    window.switchAuthTab = function(tab) {
+      document.getElementById('tab-login').classList.toggle('active', tab==='login');
+      document.getElementById('tab-register').classList.toggle('active', tab==='register');
+      document.getElementById('pane-login').classList.toggle('active', tab==='login');
+      document.getElementById('pane-register').classList.toggle('active', tab==='register');
+      document.getElementById('auth-modal-title').textContent = tab==='login' ? 'Sign In' : 'Create Account';
+    };
+    document.querySelectorAll('.modal-overlay').forEach(o => {
+      o.addEventListener('click', e => { if(e.target===o) window.closeModal(o.id); });
+    });
+
+    // ── TOAST ────────────────────────────────────────────────
+    window.showToast = function(title, msg, isError) {
+      const el = document.getElementById('toast');
+      document.getElementById('toast-title').textContent = title;
+      document.getElementById('toast-msg').textContent = msg;
+      el.classList.toggle('error', !!isError);
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 4500);
+    };
+
+    // ── START ────────────────────────────────────────────────
+    updateAuthUI();
+    attachListeners();
+    if (window.location.hash === '#register') window.openModal('auth-modal','register');
+
+    // Timeout fallback: if Firebase hasn't responded in 8s, hide overlay
+    setTimeout(() => {
+      document.getElementById('db-connecting').classList.add('hidden');
+      if (!dbReady) document.getElementById('db-error-msg').classList.add('visible');
+    }, 8000);
+  </script>
+</body>
+</html>
