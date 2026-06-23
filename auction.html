@@ -860,8 +860,7 @@
     };
 
     async function sendOutbidNotification(outbidBid, item, newAmount) {
-      try { await fetch('/api/notify-outbid',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({toEmail:outbidBid.bidderEmail,toPhone:outbidBid.bidderPhone,firstName:outbidBid.bidderFirstName,itemTitle:item.title,yourBid:outbidBid.amount,newHighBid:newAmount})}); } catch(e){}
-    }
+      try { await fetch('https://huskers-auction-production.up.railway.app/api/notify-outbid', {
 
     // ── USER DASHBOARD ────────────────────────────────────────
     window.openDashboard = function(tab) {
