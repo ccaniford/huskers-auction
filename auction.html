@@ -19,7 +19,7 @@
     html { scroll-behavior: smooth; }
     body { font-family: var(--font-body); background: var(--charcoal); color: var(--white); overflow-x: hidden; }
 
-    /* NAV */
+    /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
       background: rgba(26,26,26,0.97); backdrop-filter: blur(12px);
@@ -28,33 +28,54 @@
       padding: 0 40px; height: 68px;
     }
     .nav-logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
-    .nav-logo-n {
-      width: 44px; height: 44px; background: var(--scarlet);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--white);
-      clip-path: polygon(8% 0%, 92% 0%, 100% 100%, 0% 100%);
-    }
+    .nav-logo-n { width: 44px; height: 44px; background: var(--scarlet); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--white); clip-path: polygon(8% 0%, 92% 0%, 100% 100%, 0% 100%); }
     .nav-wordmark { font-family: var(--font-display); font-size: 15px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--white); line-height: 1.2; }
     .nav-wordmark span { display: block; color: var(--scarlet); font-size: 11px; letter-spacing: 3px; }
-    .nav-right { display: flex; align-items: center; gap: 20px; }
-    .nav-user-badge {
-      display: none; align-items: center; gap: 8px;
-      background: rgba(228,28,56,0.15); border: 1px solid rgba(228,28,56,0.3);
-      padding: 6px 14px;
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+
+    /* ── PROFILE DROPDOWN ── */
+    .profile-menu { position: relative; display: none; }
+    .profile-menu.visible { display: block; }
+    .profile-trigger {
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
+      background: rgba(228,28,56,0.12); border: 1px solid rgba(228,28,56,0.3);
+      padding: 7px 14px; transition: background 0.2s;
       font-family: var(--font-display); font-size: 12px; letter-spacing: 1px; color: var(--scarlet);
+      user-select: none;
     }
-    .nav-user-badge.visible { display: flex; }
-    .nav-logout { font-family: var(--font-display); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray-mid); background: none; border: none; cursor: pointer; transition: color 0.2s; }
-    .nav-logout:hover { color: var(--scarlet); }
+    .profile-trigger:hover { background: rgba(228,28,56,0.2); }
+    .profile-trigger-arrow { font-size: 9px; transition: transform 0.2s; margin-left: 2px; }
+    .profile-menu.open .profile-trigger-arrow { transform: rotate(180deg); }
+    .profile-dropdown {
+      display: none; position: absolute; top: calc(100% + 10px); right: 0;
+      background: #1e1e1e; border: 1px solid rgba(255,255,255,0.12);
+      border-top: 2px solid var(--scarlet);
+      min-width: 200px; z-index: 500;
+    }
+    .profile-menu.open .profile-dropdown { display: block; }
+    .profile-dropdown-header {
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--gray-border);
+    }
+    .profile-dropdown-name { font-family: var(--font-display); font-size: 14px; font-weight: 700; text-transform: uppercase; color: var(--white); }
+    .profile-dropdown-email { font-size: 11px; color: var(--gray-mid); margin-top: 2px; }
+    .profile-dropdown-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px; cursor: pointer;
+      font-family: var(--font-display); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: rgba(255,255,255,0.7); transition: all 0.15s; border: none; background: none; width: 100%; text-align: left;
+    }
+    .profile-dropdown-item:hover { background: rgba(228,28,56,0.1); color: var(--white); }
+    .profile-dropdown-item svg { flex-shrink: 0; }
+    .profile-dropdown-divider { height: 1px; background: var(--gray-border); margin: 4px 0; }
+    .profile-dropdown-item.signout { color: var(--gray-mid); }
+    .profile-dropdown-item.signout:hover { color: var(--scarlet); background: rgba(228,28,56,0.06); }
+
     .nav-back { font-family: var(--font-display); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray-mid); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.2s; }
     .nav-back:hover { color: var(--white); }
 
-    /* CONNECTING OVERLAY */
-    .db-connecting {
-      position: fixed; inset: 0; z-index: 9999;
-      background: var(--charcoal);
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
-    }
+    /* ── CONNECTING OVERLAY ── */
+    .db-connecting { position: fixed; inset: 0; z-index: 9999; background: var(--charcoal); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
     .db-connecting.hidden { display: none; }
     .spinner { width: 44px; height: 44px; border: 3px solid rgba(228,28,56,0.2); border-top-color: var(--scarlet); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -62,12 +83,9 @@
     .db-error-msg { font-size: 13px; color: var(--scarlet); text-align: center; max-width: 400px; line-height: 1.6; display: none; }
     .db-error-msg.visible { display: block; }
 
-    /* AUCTION HERO */
+    /* ── AUCTION HERO ── */
     .auction-hero { padding-top: 68px; background: linear-gradient(180deg, #1a0508 0%, var(--charcoal) 100%); border-bottom: 1px solid rgba(228,28,56,0.2); }
-    .auction-hero-inner {
-      max-width: 1200px; margin: 0 auto; padding: 56px 40px 48px;
-      display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px;
-    }
+    .auction-hero-inner { max-width: 1200px; margin: 0 auto; padding: 56px 40px 48px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px; }
     .auction-eyebrow { font-family: var(--font-display); font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--scarlet); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
     .auction-eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--scarlet); }
     .auction-hero-title { font-family: var(--font-display); font-size: clamp(36px, 6vw, 68px); font-weight: 700; text-transform: uppercase; line-height: 0.95; letter-spacing: -1px; color: var(--white); }
@@ -83,26 +101,16 @@
     .timer-digits span { color: var(--scarlet); }
     .timer-closed-msg { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--scarlet); letter-spacing: 1px; text-transform: uppercase; }
 
-    /* LIVE PULSE (shown when a new bid lands) */
-    .live-pulse {
-      position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
-      z-index: 500; background: var(--scarlet); color: var(--white);
-      font-family: var(--font-display); font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
-      padding: 10px 28px; display: flex; align-items: center; gap: 10px;
-      opacity: 0; pointer-events: none; transition: opacity 0.3s;
-    }
+    /* ── LIVE PULSE ── */
+    .live-pulse { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 500; background: var(--scarlet); color: var(--white); font-family: var(--font-display); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; padding: 10px 28px; display: flex; align-items: center; gap: 10px; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
     .live-pulse.show { opacity: 1; }
     .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--white); animation: blink 0.8s ease-in-out infinite; }
 
-    /* MAIN */
+    /* ── MAIN ── */
     .auction-main { max-width: 1200px; margin: 0 auto; padding: 48px 40px; }
 
-    /* AUTH BAR */
-    .auth-bar {
-      background: var(--charcoal-mid); border: 1px solid var(--gray-border); border-left: 3px solid var(--scarlet);
-      padding: 18px 24px; margin-bottom: 40px;
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;
-    }
+    /* ── AUTH BAR ── */
+    .auth-bar { background: var(--charcoal-mid); border: 1px solid var(--gray-border); border-left: 3px solid var(--scarlet); padding: 18px 24px; margin-bottom: 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
     .auth-bar-text { font-size: 14px; color: rgba(255,255,255,0.7); }
     .auth-bar-text strong { color: var(--white); }
     .auth-bar-actions { display: flex; gap: 10px; }
@@ -111,25 +119,23 @@
     .btn-sm-outline { background: transparent; color: var(--white); font-family: var(--font-display); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 20px; border: 1px solid rgba(255,255,255,0.3); cursor: pointer; transition: border-color 0.2s; }
     .btn-sm-outline:hover { border-color: var(--white); }
 
-    /* CLOSED BANNER */
+    /* ── CLOSED BANNER ── */
     .auction-closed-banner { background: rgba(228,28,56,0.08); border: 1px solid rgba(228,28,56,0.3); padding: 24px; margin-bottom: 32px; text-align: center; display: none; }
     .auction-closed-banner.visible { display: block; }
     .auction-closed-banner h3 { font-family: var(--font-display); font-size: 22px; font-weight: 700; text-transform: uppercase; color: var(--scarlet); margin-bottom: 8px; }
     .auction-closed-banner p { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; }
     .auction-closed-banner a { color: var(--scarlet); }
 
-    /* ITEMS GRID */
+    /* ── ITEMS GRID ── */
     .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
     .item-card { background: var(--charcoal-mid); border: 1px solid var(--gray-border); position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.2s; }
     .item-card:hover { border-color: rgba(228,28,56,0.4); transform: translateY(-2px); }
     .item-card.bid-flash { animation: bidFlash 0.7s ease; }
-    @keyframes bidFlash { 0%,100%{border-color:rgba(228,28,56,0.4)} 50%{border-color:var(--scarlet); box-shadow: 0 0 18px rgba(228,28,56,0.35);} }
-
+    @keyframes bidFlash { 0%,100%{border-color:rgba(228,28,56,0.4)} 50%{border-color:var(--scarlet); box-shadow:0 0 18px rgba(228,28,56,0.35);} }
     .item-card-img { width: 100%; height: 200px; background: var(--charcoal-light); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
     .item-card-img img { width: 100%; height: 100%; object-fit: cover; }
     .item-card-img .img-placeholder { font-family: var(--font-display); font-size: 48px; font-weight: 700; color: rgba(228,28,56,0.2); }
     .item-num { position: absolute; top: 12px; left: 12px; background: var(--scarlet); color: var(--white); font-family: var(--font-display); font-size: 11px; letter-spacing: 1px; font-weight: 600; padding: 4px 10px; }
-
     .item-card-body { padding: 24px; }
     .item-category { font-family: var(--font-display); font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--scarlet); margin-bottom: 6px; }
     .item-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; text-transform: uppercase; color: var(--white); line-height: 1.15; margin-bottom: 10px; }
@@ -137,7 +143,6 @@
     .item-bid-row { display: flex; align-items: flex-end; justify-content: space-between; border-top: 1px solid var(--gray-border); padding-top: 18px; }
     .item-bid-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray-mid); margin-bottom: 2px; }
     .item-bid-amount { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--white); line-height: 1; transition: color 0.4s; }
-    .item-bid-amount.updated { color: var(--green); }
     .item-bid-count { font-size: 11px; color: var(--gray-mid); margin-top: 3px; }
     .btn-bid { background: var(--scarlet); color: var(--white); font-family: var(--font-display); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; padding: 12px 24px; border: none; cursor: pointer; transition: background 0.2s; clip-path: polygon(5px 0%, 100% 0%, calc(100% - 5px) 100%, 0% 100%); white-space: nowrap; }
     .btn-bid:hover { background: var(--scarlet-dark); }
@@ -145,7 +150,7 @@
     .item-winner-badge { display: none; background: var(--green); color: var(--white); font-family: var(--font-display); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 6px 14px; margin-top: 12px; text-align: center; }
     .item-winner-badge.visible { display: block; }
 
-    /* MODALS */
+    /* ── MODALS ── */
     .modal-overlay { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 24px; }
     .modal-overlay.open { display: flex; }
     .modal { background: var(--charcoal-mid); border: 1px solid var(--gray-border); border-top: 3px solid var(--scarlet); width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; position: relative; }
@@ -161,7 +166,7 @@
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
 
-    /* FORMS */
+    /* ── FORMS ── */
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
     .form-row.single { grid-template-columns: 1fr; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
@@ -171,13 +176,15 @@
     .form-input::placeholder { color: rgba(255,255,255,0.25); }
     .form-error { font-size: 11px; color: #ff6b6b; margin-top: -8px; margin-bottom: 4px; display: none; }
     .form-error.visible { display: block; }
+    .form-success { font-size: 12px; color: var(--green); margin-top: 8px; text-align: center; display: none; }
+    .form-success.visible { display: block; }
     .form-submit { width: 100%; background: var(--scarlet); color: var(--white); font-family: var(--font-display); font-size: 14px; letter-spacing: 2px; text-transform: uppercase; padding: 15px; border: none; cursor: pointer; transition: background 0.2s; margin-top: 8px; clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%); }
     .form-submit:hover { background: var(--scarlet-dark); }
     .form-submit:disabled { background: var(--charcoal-light); color: var(--gray-mid); cursor: not-allowed; clip-path: none; }
     .form-note { font-size: 12px; color: var(--gray-mid); text-align: center; margin-top: 14px; line-height: 1.5; }
     .form-note a { color: var(--scarlet); cursor: pointer; }
 
-    /* BID MODAL */
+    /* ── BID MODAL ── */
     .bid-item-preview { background: var(--charcoal); padding: 16px; margin-bottom: 24px; border-left: 3px solid var(--scarlet); }
     .bid-item-name { font-family: var(--font-display); font-size: 16px; font-weight: 700; text-transform: uppercase; color: var(--white); }
     .bid-item-current { font-size: 13px; color: var(--gray-mid); margin-top: 4px; }
@@ -187,19 +194,50 @@
     .bid-preset:hover, .bid-preset.active { background: var(--scarlet); border-color: var(--scarlet); }
     .bid-min-note { font-size: 12px; color: var(--gray-mid); margin-bottom: 16px; }
     .bid-min-note strong { color: var(--gold); }
-
-    /* GUEST SECTION DIVIDER */
     .guest-divider { border-top: 1px solid var(--gray-border); padding-top: 20px; margin-bottom: 20px; }
     .guest-section-label { font-family: var(--font-display); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--scarlet); margin-bottom: 16px; }
 
-    /* TOAST */
+    /* ── USER DASHBOARD MODAL ── */
+    .dashboard-modal { max-width: 640px; }
+    .dash-tabs { display: flex; border-bottom: 1px solid var(--gray-border); margin-bottom: 0; }
+    .dash-tab { font-family: var(--font-display); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray-mid); background: none; border: none; cursor: pointer; padding: 14px 24px 14px 0; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s; display: flex; align-items: center; gap: 8px; }
+    .dash-tab.active { color: var(--white); border-bottom-color: var(--scarlet); }
+    .dash-pane { display: none; padding: 24px 0 0; }
+    .dash-pane.active { display: block; }
+
+    /* BIDS TAB */
+    .user-bid-card { background: var(--charcoal); border: 1px solid var(--gray-border); padding: 16px 18px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .user-bid-card:last-child { margin-bottom: 0; }
+    .user-bid-info { flex: 1; min-width: 0; }
+    .user-bid-item-num { font-family: var(--font-display); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--scarlet); margin-bottom: 3px; }
+    .user-bid-item-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; text-transform: uppercase; color: var(--white); line-height: 1.2; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-bid-meta { font-size: 11px; color: var(--gray-mid); }
+    .user-bid-right { text-align: right; flex-shrink: 0; }
+    .user-bid-amount { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--white); line-height: 1; }
+    .user-bid-status { display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-display); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 10px; margin-top: 6px; }
+    .user-bid-status.leading { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+    .user-bid-status.outbid { background: rgba(228,28,56,0.12); color: var(--scarlet); border: 1px solid rgba(228,28,56,0.3); }
+    .user-bid-status.winner { background: rgba(212,168,67,0.15); color: var(--gold); border: 1px solid rgba(212,168,67,0.3); }
+    .user-bid-status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    .no-bids-msg { text-align: center; padding: 40px 0; color: var(--gray-mid); font-size: 14px; line-height: 1.6; }
+    .no-bids-msg strong { color: var(--white); display: block; font-family: var(--font-display); font-size: 16px; text-transform: uppercase; margin-bottom: 8px; }
+
+    /* SETTINGS TAB */
+    .settings-section-label { font-family: var(--font-display); font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--scarlet); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--gray-border); }
+    .settings-save-row { display: flex; gap: 12px; align-items: center; margin-top: 20px; flex-wrap: wrap; }
+    .btn-save { background: var(--scarlet); color: var(--white); font-family: var(--font-display); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; padding: 13px 32px; border: none; cursor: pointer; transition: background 0.2s; clip-path: polygon(5px 0%, 100% 0%, calc(100% - 5px) 100%, 0% 100%); }
+    .btn-save:hover { background: var(--scarlet-dark); }
+    .btn-save:disabled { background: var(--charcoal-light); color: var(--gray-mid); cursor: not-allowed; clip-path: none; }
+    .pw-section { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--gray-border); }
+
+    /* ── TOAST ── */
     .toast { position: fixed; bottom: 28px; right: 28px; z-index: 9999; background: var(--charcoal-mid); border: 1px solid var(--gray-border); border-left: 3px solid var(--green); padding: 16px 22px; max-width: 340px; font-size: 14px; color: var(--white); line-height: 1.5; transform: translateY(100px); opacity: 0; transition: all 0.4s ease; }
     .toast.show { transform: translateY(0); opacity: 1; }
     .toast.error { border-left-color: var(--scarlet); }
     .toast-title { font-family: var(--font-display); font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--green); margin-bottom: 4px; }
     .toast.error .toast-title { color: var(--scarlet); }
 
-    /* FOOTER */
+    /* ── FOOTER ── */
     footer { background: #111; border-top: 2px solid var(--scarlet); padding: 48px 40px 32px; text-align: center; margin-top: 80px; }
     .footer-logo { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--white); margin-bottom: 8px; }
     .footer-logo span { color: var(--scarlet); }
@@ -209,7 +247,7 @@
     .footer-divider { width: 60px; height: 2px; background: var(--scarlet); margin: 24px auto; }
     .footer-copy { font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: 1px; }
 
-    /* RESPONSIVE */
+    /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       nav { padding: 0 20px; }
       .auction-hero-inner { padding: 40px 20px 32px; flex-direction: column; align-items: flex-start; }
@@ -219,6 +257,7 @@
       .form-row { grid-template-columns: 1fr; }
       .modal-header, .modal-body { padding-left: 20px; padding-right: 20px; }
       footer { padding: 40px 20px 28px; }
+      .profile-dropdown { right: -20px; }
     }
   </style>
 </head>
@@ -228,10 +267,7 @@
   <div class="db-connecting" id="db-connecting">
     <div class="spinner"></div>
     <div class="db-connecting-text">Connecting to Live Auction</div>
-    <div class="db-error-msg" id="db-error-msg">
-      Could not connect to the live auction database.<br>
-      Please check your internet connection and refresh.
-    </div>
+    <div class="db-error-msg" id="db-error-msg">Could not connect to the live auction database.<br>Please check your internet connection and refresh.</div>
   </div>
 
   <!-- LIVE BID PULSE -->
@@ -247,11 +283,35 @@
       <div class="nav-wordmark">Nebraska <span>Silent Auction</span></div>
     </a>
     <div class="nav-right">
-      <div class="nav-user-badge" id="nav-user-badge">
-        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span id="nav-user-name"></span>
+
+      <!-- PROFILE DROPDOWN (shown when signed in) -->
+      <div class="profile-menu" id="profile-menu">
+        <div class="profile-trigger" id="profile-trigger" onclick="toggleProfileMenu()">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span id="nav-user-name"></span>
+          <span class="profile-trigger-arrow">▼</span>
+        </div>
+        <div class="profile-dropdown" id="profile-dropdown">
+          <div class="profile-dropdown-header">
+            <div class="profile-dropdown-name" id="dd-name"></div>
+            <div class="profile-dropdown-email" id="dd-email"></div>
+          </div>
+          <button class="profile-dropdown-item" onclick="openDashboard('bids')">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            My Bids
+          </button>
+          <button class="profile-dropdown-item" onclick="openDashboard('settings')">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Settings
+          </button>
+          <div class="profile-dropdown-divider"></div>
+          <button class="profile-dropdown-item signout" onclick="logout()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign Out
+          </button>
+        </div>
       </div>
-      <button class="nav-logout" id="nav-logout" style="display:none" onclick="logout()">Sign Out</button>
+
       <a href="index.html" class="nav-back">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
         Home
@@ -265,10 +325,7 @@
       <div class="auction-hero-left">
         <div class="auction-eyebrow">Matt Rhule Football Camps LLC</div>
         <h1 class="auction-hero-title">Silent <span>Auction</span></h1>
-        <div class="auction-hero-meta">
-          June 24, 2026 · Opens 5:00 AM CT · Closes 3:00 PM CT<br>
-          10 exclusive Husker experiences &amp; memorabilia items
-        </div>
+        <div class="auction-hero-meta">June 24, 2026 · Opens 5:00 AM CT · Closes 3:00 PM CT<br>10 exclusive Husker experiences &amp; memorabilia items</div>
       </div>
       <div class="auction-hero-right">
         <div class="auction-status">
@@ -277,9 +334,7 @@
         </div>
         <div>
           <div class="timer-label" id="timer-label">Closes In</div>
-          <div class="timer-digits" id="timer-digits">
-            <span id="t-h">--</span>:<span id="t-m">--</span>:<span id="t-s">--</span>
-          </div>
+          <div class="timer-digits" id="timer-digits"><span id="t-h">--</span>:<span id="t-m">--</span>:<span id="t-s">--</span></div>
           <div class="timer-closed-msg" id="timer-closed" style="display:none">Auction Closed</div>
         </div>
       </div>
@@ -315,7 +370,7 @@
     <div class="footer-copy">© 2026 Nebraska Football · All Rights Reserved</div>
   </footer>
 
-  <!-- AUTH MODAL -->
+  <!-- ══ AUTH MODAL ══ -->
   <div class="modal-overlay" id="auth-modal">
     <div class="modal">
       <div class="modal-header">
@@ -330,21 +385,13 @@
           <button class="modal-tab" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
           <button class="modal-tab" id="tab-register" onclick="switchAuthTab('register')">Create Account</button>
         </div>
-        <!-- LOGIN -->
         <div class="tab-pane" id="pane-login">
-          <div class="form-row single"><div class="form-group">
-            <label class="form-label">Email Address</label>
-            <input class="form-input" type="email" id="login-email" placeholder="yourname@email.com" />
-          </div></div>
-          <div class="form-row single"><div class="form-group">
-            <label class="form-label">Password</label>
-            <input class="form-input" type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleLogin()" />
-          </div></div>
+          <div class="form-row single"><div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="login-email" placeholder="yourname@email.com" /></div></div>
+          <div class="form-row single"><div class="form-group"><label class="form-label">Password</label><input class="form-input" type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')handleLogin()" /></div></div>
           <div class="form-error" id="login-error">Invalid email or password. Please try again.</div>
           <button class="form-submit" id="login-btn" onclick="handleLogin()">Sign In</button>
           <div class="form-note">Don't have an account? <a onclick="switchAuthTab('register')">Create one here</a></div>
         </div>
-        <!-- REGISTER -->
         <div class="tab-pane" id="pane-register">
           <div class="form-row">
             <div class="form-group"><label class="form-label">First Name *</label><input class="form-input" type="text" id="reg-first" placeholder="John" /></div>
@@ -363,7 +410,7 @@
     </div>
   </div>
 
-  <!-- BID MODAL -->
+  <!-- ══ BID MODAL ══ -->
   <div class="modal-overlay" id="bid-modal">
     <div class="modal">
       <div class="modal-header">
@@ -386,7 +433,6 @@
             <input class="form-input" type="number" id="bid-amount-input" placeholder="Enter amount" min="0" step="50" />
           </div>
         </div>
-        <!-- GUEST FIELDS -->
         <div id="guest-fields" style="display:none">
           <div class="guest-divider">
             <div class="guest-section-label">Your Information</div>
@@ -407,15 +453,77 @@
     </div>
   </div>
 
+  <!-- ══ USER DASHBOARD MODAL ══ -->
+  <div class="modal-overlay" id="dashboard-modal">
+    <div class="modal dashboard-modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title-eyebrow">Nebraska Football Auction</div>
+          <div class="modal-title">My Account</div>
+        </div>
+        <button class="modal-close" onclick="closeModal('dashboard-modal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="dash-tabs">
+          <button class="dash-tab" id="dash-tab-bids" onclick="switchDashTab('bids')">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            My Bids
+          </button>
+          <button class="dash-tab" id="dash-tab-settings" onclick="switchDashTab('settings')">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            Settings
+          </button>
+        </div>
+
+        <!-- BIDS PANE -->
+        <div class="dash-pane" id="dash-pane-bids">
+          <div id="user-bids-list"></div>
+        </div>
+
+        <!-- SETTINGS PANE -->
+        <div class="dash-pane" id="dash-pane-settings">
+          <div class="settings-section-label">Account Information</div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">First Name *</label><input class="form-input" type="text" id="s-first" /></div>
+            <div class="form-group"><label class="form-label">Last Name *</label><input class="form-input" type="text" id="s-last" /></div>
+          </div>
+          <div class="form-row single"><div class="form-group"><label class="form-label">Email Address *</label><input class="form-input" type="email" id="s-email" /></div></div>
+          <div class="form-row single"><div class="form-group"><label class="form-label">Phone Number *</label><input class="form-input" type="tel" id="s-phone" /></div></div>
+          <div class="form-row single"><div class="form-group"><label class="form-label">Address *</label><input class="form-input" type="text" id="s-address" /></div></div>
+          <div class="form-row single"><div class="form-group"><label class="form-label">Company Name</label><input class="form-input" type="text" id="s-company" /></div></div>
+          <div class="form-error" id="s-info-error"></div>
+          <div class="form-success" id="s-info-success">Account information updated successfully.</div>
+          <div class="settings-save-row">
+            <button class="btn-save" id="s-info-btn" onclick="saveAccountInfo()">Save Changes</button>
+          </div>
+
+          <div class="pw-section">
+            <div class="settings-section-label">Change Password</div>
+            <div class="form-row single"><div class="form-group"><label class="form-label">Current Password *</label><input class="form-input" type="password" id="s-pw-current" placeholder="••••••••" /></div></div>
+            <div class="form-row single"><div class="form-group"><label class="form-label">New Password *</label><input class="form-input" type="password" id="s-pw-new" placeholder="New password" /></div></div>
+            <div class="form-row single"><div class="form-group"><label class="form-label">Confirm New Password *</label><input class="form-input" type="password" id="s-pw-confirm" placeholder="Confirm new password" /></div></div>
+            <div class="form-error" id="s-pw-error"></div>
+            <div class="form-success" id="s-pw-success">Password updated successfully.</div>
+            <div class="settings-save-row">
+              <button class="btn-save" id="s-pw-btn" onclick="savePassword()">Update Password</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST -->
   <div class="toast" id="toast">
     <div class="toast-title" id="toast-title">Success</div>
     <div id="toast-msg"></div>
   </div>
 
-  <!-- FIREBASE SDK -->
+  <!-- ══ FIREBASE — inline config ══ -->
   <script>
-const FIREBASE_CONFIG = {
+    // !! PASTE YOUR REAL FIREBASE VALUES HERE — same as your working auction.html !!
+    const FIREBASE_CONFIG = {
   apiKey:            "AIzaSyBgWf29g_2C1JcxuyKZ55qo0eImLiY7_9M",
   authDomain:        "huskers-auction.firebaseapp.com",
   databaseURL:       "https://huskers-auction-default-rtdb.firebaseio.com",
@@ -424,259 +532,220 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "496839822385",
   appId:             "1:496839822385:web:07dcdb3606d3998da69910"
 };
-const AUCTION_DEFAULTS = {
-  openTime:  '2026-06-22T00:00:00.000Z',
-  closeTime: '2026-06-24T20:00:00.000Z'
-};
-</script>
-  <script type="module">
-    import { initializeApp }                          from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getDatabase, ref, onValue, push, set, get, child }
-                                                      from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+    const AUCTION_DEFAULTS = {
+      openTime:  '2026-06-22T00:00:00.000Z',
+      closeTime: '2026-06-24T20:00:00.000Z'
+    };
+  </script>
 
-    // ── INIT ────────────────────────────────────────────────
+  <script type="module">
+    import { initializeApp }                               from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getDatabase, ref, onValue, push, set, get }  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
+
     const app = initializeApp(FIREBASE_CONFIG);
     const db  = getDatabase(app);
 
-    // ── STATE ───────────────────────────────────────────────
-    let allBids    = {};   // { pushId: bidObject } — live from Firebase
+    // ── STATE ─────────────────────────────────────────────────
+    let allBids         = {};
     let auctionSettings = { openTime: AUCTION_DEFAULTS.openTime, closeTime: AUCTION_DEFAULTS.closeTime };
     let activeBidItemId = null;
-    let dbReady = false;
+    let dbReady         = false;
+    let startingBids    = {1:750,2:500,3:300,4:300,5:300,6:750,7:500,8:250,9:400,10:500};
 
-    // ── ITEM DEFINITIONS ────────────────────────────────────
+    // ── AUCTION ITEMS ─────────────────────────────────────────
     const AUCTION_ITEMS = [
-      { id:1,  category:'VIP Experience',     title:'Sideline Passes – Ohio State Game',        startingBid:750,  image:'https://huskers.com/images/2024/11/2/Nebraska_vs_Ohio_State_2024.jpg', desc:'Stand where the Huskers stand. These two sideline passes for the Ohio State game put you on the field during pregame warmups, right in the action for one of the biggest Big Ten matchups of the season. Experience the tunnel walk from the sideline, hear the roar of 90,000 fans, and get an unobstructed view of every play. Passes include field access and a commemorative lanyard.' },
-      { id:2,  category:'VIP Experience',     title:'Sideline Passes – Indiana Game',           startingBid:500,  image:'https://huskers.com/images/2024/9/28/Nebraska_vs_Indiana_2024.jpg',  desc:'Get up close to Big Ten football at Memorial Stadium. Two sideline passes for the Indiana matchup give you access to the field during warmups and the full game experience from the sideline. Feel the energy of the Husker faithful from the best seat in the house. Passes include field access and a commemorative credential.' },
-      { id:3,  category:'Behind the Scenes',  title:'Corporation Facility Tour of OLC',         startingBid:300,  image:'https://huskers.com/images/2022/7/20/athlFacilitiesMain.jpg',          desc:'Go behind the curtain of one of college football\'s elite facilities. This exclusive guided tour of the Osborne Football Complex takes you through the locker rooms, weight room, film rooms, and recruiting spaces that fuel Nebraska Football. A rare look at the infrastructure powering one of the most storied programs in college football history.' },
-      { id:4,  category:'Golf Experience',    title:'Round of Golf – Firethorn',                startingBid:300,  image:'', desc:'Tee it up at Firethorn Golf Club, one of Lincoln\'s premier private courses. This package includes a round of golf for one, with cart, at the acclaimed Firethorn course. Known for its challenging layout and immaculate conditions, Firethorn is a bucket-list course for Nebraska golfers. A perfect way to combine Nebraska Football pride with an exceptional day on the links.' },
-      { id:5,  category:'Golf Experience',    title:'Round of Golf – Lost Rail',                startingBid:300,  image:'', desc:'Play the acclaimed Lost Rail Golf Course, a stunning links-style layout in the Nebraska Sandhills. This package includes a round of golf for one at one of the most unique and highly regarded courses in the Midwest. With natural terrain, sweeping views, and a truly one-of-a-kind experience, a round at Lost Rail is a memory that lasts long after the 18th hole.' },
-      { id:6,  category:'Ultimate Access',    title:'Day in the Life as a Husker (Fall Camp)',  startingBid:750,  image:'https://huskers.com/images/2024/8/9/nebraska_football_practice_2024_0042.jpg', desc:'Live the dream — spend a day inside Nebraska Football Fall Camp. Shadow the coaching staff, observe position group drills, watch competitive team periods, and experience the intensity and brotherhood that defines Husker football. Includes a behind-the-scenes look at how a Big Ten program prepares for a season and a personalized Husker gear package.' },
-      { id:7,  category:'Game Day Experience',title:'Tunnel Walk Experience',                   startingBid:500,  image:'https://huskers.com/images/2023/8/31/tunnel_walk.jpg',                desc:'Walk the walk — literally. This exclusive package puts you and a guest inside the iconic Nebraska Tunnel Walk before kickoff. Feel the electricity of 90,000 fans building to a fever pitch as you walk the path from the locker room to the field alongside the team. One of the most electric pre-game experiences in all of college football.' },
-      { id:8,  category:'Memorabilia',        title:'Autographed Football – Nebraska Players',  startingBid:250,  image:'https://huskers.com/images/2024/8/14/nebraska_football_2024.jpg',      desc:'Own a piece of Husker history. This official NCAA football is autographed by multiple Nebraska Football players — a true collector\'s item. The ball comes authenticated with individual signatures and is display-ready. Show your Nebraska pride with one of the most treasured pieces of Husker memorabilia available.' },
-      { id:9,  category:'Memorabilia',        title:'Autographed Football – Matt Rhule',        startingBid:400,  image:'https://huskers.com/images/2023/12/5/matt_rhule_nebraska.jpg',         desc:'A rare personal autograph from Head Coach Matt Rhule on an official NCAA football. Coach Rhule personally signed this ball — a collector\'s piece that captures a defining era of Nebraska Football. Authenticated and display-ready. The perfect centerpiece for any Husker fan\'s collection.' },
-      { id:10, category:'Behind the Scenes',  title:'Film Study with Coaches',                  startingBid:500,  image:'https://huskers.com/images/2024/8/9/nebraska_football_practice_2024_0121.jpg', desc:'Pull up a chair in the same film room where Big Ten games are won. Spend time with Nebraska Football coaches reviewing actual game film — the formations, adjustments, and decisions that define modern college football. You\'ll walk away with an insider\'s understanding of how elite coaches break down opponents and prepare their players.' }
+      { id:1,  category:'VIP Experience',      title:'Sideline Passes – Ohio State Game',       startingBid:750, image:'https://huskers.com/images/2024/11/2/Nebraska_vs_Ohio_State_2024.jpg',             desc:'Stand where the Huskers stand. These two sideline passes for the Ohio State game put you on the field during pregame warmups, right in the action for one of the biggest Big Ten matchups of the season. Experience the tunnel walk from the sideline, hear the roar of 90,000 fans, and get an unobstructed view of every play. Passes include field access and a commemorative credential.' },
+      { id:2,  category:'VIP Experience',      title:'Sideline Passes – Indiana Game',          startingBid:500, image:'https://huskers.com/images/2024/9/28/Nebraska_vs_Indiana_2024.jpg',               desc:'Get up close to Big Ten football at Memorial Stadium. Two sideline passes for the Indiana matchup give you access to the field during warmups and the full game experience from the sideline. Feel the energy of the Husker faithful from the best seat in the house. Passes include field access and a commemorative credential.' },
+      { id:3,  category:'Behind the Scenes',   title:'Corporation Facility Tour of OLC',        startingBid:300, image:'https://huskers.com/images/2022/7/20/athlFacilitiesMain.jpg',                     desc:'Go behind the curtain of one of college football\'s elite facilities. This exclusive guided tour of the Osborne Football Complex takes you through the locker rooms, weight room, film rooms, and recruiting spaces that fuel Nebraska Football. A rare look at the infrastructure powering one of the most storied programs in college football history.' },
+      { id:4,  category:'Golf Experience',     title:'Round of Golf – Firethorn',               startingBid:300, image:'', desc:'Tee it up at Firethorn Golf Club, one of Lincoln\'s premier private courses. This package includes a round of golf for one, with cart, at the acclaimed Firethorn course. Known for its challenging layout and immaculate conditions, Firethorn is a bucket-list course for Nebraska golfers. A perfect way to combine Nebraska Football pride with an exceptional day on the links.' },
+      { id:5,  category:'Golf Experience',     title:'Round of Golf – Lost Rail',               startingBid:300, image:'', desc:'Play the acclaimed Lost Rail Golf Course, a stunning links-style layout in the Nebraska Sandhills. This package includes a round of golf for one at one of the most unique and highly regarded courses in the Midwest. With natural terrain, sweeping views, and a truly one-of-a-kind experience, a round at Lost Rail is a memory that lasts long after the 18th hole.' },
+      { id:6,  category:'Ultimate Access',     title:'Day in the Life as a Husker (Fall Camp)', startingBid:750, image:'https://huskers.com/images/2024/8/9/nebraska_football_practice_2024_0042.jpg',    desc:'Live the dream — spend a day inside Nebraska Football Fall Camp. Shadow the coaching staff, observe position group drills, watch competitive team periods, and experience the intensity and brotherhood that defines Husker football. Includes a behind-the-scenes look at how a Big Ten program prepares for a season and a personalized Husker gear package.' },
+      { id:7,  category:'Game Day Experience', title:'Tunnel Walk Experience',                  startingBid:500, image:'https://huskers.com/images/2023/8/31/tunnel_walk.jpg',                            desc:'Walk the walk — literally. This exclusive package puts you and a guest inside the iconic Nebraska Tunnel Walk before kickoff. Feel the electricity of 90,000 fans building to a fever pitch as you walk the path from the locker room to the field alongside the team. One of the most electric pre-game experiences in all of college football.' },
+      { id:8,  category:'Memorabilia',         title:'Autographed Football – Nebraska Players', startingBid:250, image:'https://huskers.com/images/2024/8/14/nebraska_football_2024.jpg',                 desc:'Own a piece of Husker history. This official NCAA football is autographed by multiple 2026 Nebraska Football players — a true collector\'s item. The ball comes authenticated with individual signatures and is display-ready. Show your Nebraska pride with one of the most treasured pieces of Husker memorabilia available.' },
+      { id:9,  category:'Memorabilia',         title:'Autographed Football – Matt Rhule',       startingBid:400, image:'https://huskers.com/images/2023/12/5/matt_rhule_nebraska.jpg',                    desc:'A rare personal autograph from Head Coach Matt Rhule on an official NCAA football. Coach Rhule personally signed this ball — a collector\'s piece that captures a defining era of Nebraska Football. Authenticated and display-ready. The perfect centerpiece for any Husker fan\'s collection.' },
+      { id:10, category:'Behind the Scenes',   title:'Film Study with Coaches',                 startingBid:500, image:'https://huskers.com/images/2024/8/9/nebraska_football_practice_2024_0121.jpg',    desc:'Pull up a chair in the same film room where Big Ten games are won. Spend time with Nebraska Football coaches reviewing actual game film — the formations, adjustments, and decisions that define modern college football. You\'ll walk away with an insider\'s understanding of how elite coaches break down opponents and prepare their players.' }
     ];
 
-    // ── HELPERS ─────────────────────────────────────────────
+    // ── HELPERS ───────────────────────────────────────────────
     function emailToKey(email) { return email.toLowerCase().replace(/\./g, ','); }
-    function keyToEmail(key)   { return key.replace(/,/g, '.'); }
-
-    function getItemBids(itemId) {
-      return Object.values(allBids).filter(b => b.itemId === itemId);
-    }
+    function getItemBids(itemId) { return Object.values(allBids).filter(b => b.itemId === itemId); }
     function getTopBid(itemId) {
       const bids = getItemBids(itemId);
-      if (!bids.length) return null;
-      return bids.reduce((m,b) => b.amount > m.amount ? b : m, bids[0]);
+      return bids.length ? bids.reduce((m,b) => b.amount>m.amount?b:m, bids[0]) : null;
     }
     function getItemCurrentPrice(item) {
       const top = getTopBid(item.id);
-      return top ? top.amount : item.startingBid;
+      return top ? top.amount : (startingBids[item.id] || item.startingBid);
     }
-
-    // Auction timing
     function getAuctionClose() { return new Date(auctionSettings.closeTime); }
-    function getAuctionOpen()  { return new Date(auctionSettings.openTime);  }
+    function getAuctionOpen()  { return new Date(auctionSettings.openTime); }
     function isAuctionOpen()   { const n=new Date(); return n>=getAuctionOpen() && n<getAuctionClose(); }
     function isAuctionEnded()  { return new Date() >= getAuctionClose(); }
     function isAuctionSoon()   { return new Date() < getAuctionOpen(); }
 
-    // ── FIREBASE LISTENERS ───────────────────────────────────
+    // ── FIREBASE LISTENERS ────────────────────────────────────
     function attachListeners() {
-      // Settings (close time)
-      onValue(ref(db, 'auction/settings'), snap => {
+      onValue(ref(db,'auction/settings'), snap => {
         if (snap.exists()) {
-          auctionSettings = { ...auctionSettings, ...snap.val() };
+          const s = snap.val();
+          auctionSettings = { ...auctionSettings, ...s };
+          if (s.startingBids) startingBids = { ...startingBids, ...s.startingBids };
         }
       });
-
-      // Bids — real-time live feed
-      onValue(ref(db, 'auction/bids'), snap => {
+      onValue(ref(db,'auction/bids'), snap => {
         const prevBids = { ...allBids };
         allBids = snap.exists() ? snap.val() : {};
-
-        // Detect new bids (for flash + pulse)
         if (dbReady) {
           const newKeys = Object.keys(allBids).filter(k => !prevBids[k]);
+          newKeys.forEach(k => flashCard(allBids[k].itemId));
           if (newKeys.length) {
-            newKeys.forEach(k => {
-              const bid = allBids[k];
-              flashCard(bid.itemId);
-            });
-            const latestBid = allBids[newKeys[newKeys.length-1]];
-            const item = AUCTION_ITEMS.find(i => i.id === latestBid.itemId);
-            showLivePulse(item ? item.title : 'an item', latestBid.amount);
+            const latest = allBids[newKeys[newKeys.length-1]];
+            const item = AUCTION_ITEMS.find(i=>i.id===latest.itemId);
+            showLivePulse(item?item.title:'an item', latest.amount);
           }
         }
-
         renderItems();
+        // Refresh bids pane if dashboard is open
+        const dashOpen = document.getElementById('dashboard-modal').classList.contains('open');
+        const bidsActive = document.getElementById('dash-pane-bids').classList.contains('active');
+        if (dashOpen && bidsActive) renderUserBids();
+
         if (!dbReady) {
           dbReady = true;
           document.getElementById('db-connecting').classList.add('hidden');
         }
-      }, err => {
-        console.error('Firebase error:', err);
-        document.getElementById('db-error-msg').classList.add('visible');
-        // Still hide spinner, show page with localStorage fallback note
+      }, () => {
         document.getElementById('db-connecting').classList.add('hidden');
+        document.getElementById('db-error-msg').classList.add('visible');
       });
     }
 
-    // ── TIMER ───────────────────────────────────────────────
+    // ── TIMER ─────────────────────────────────────────────────
     function updateTimer() {
-      const now   = new Date();
-      const close = getAuctionClose();
-      const open  = getAuctionOpen();
-      const hEl   = document.getElementById('t-h');
-      const mEl   = document.getElementById('t-m');
-      const sEl   = document.getElementById('t-s');
-      const digEl = document.getElementById('timer-digits');
-      const closedEl = document.getElementById('timer-closed');
-      const labelEl  = document.getElementById('timer-label');
-      const dotEl    = document.getElementById('status-dot');
-      const statusEl = document.getElementById('status-text');
-      const closedBanner = document.getElementById('closed-banner');
-
+      const now=new Date(), close=getAuctionClose(), open=getAuctionOpen();
+      const hEl=document.getElementById('t-h'), mEl=document.getElementById('t-m'), sEl=document.getElementById('t-s');
+      const digEl=document.getElementById('timer-digits'), closedEl=document.getElementById('timer-closed');
+      const labelEl=document.getElementById('timer-label'), dotEl=document.getElementById('status-dot'), statusEl=document.getElementById('status-text');
+      const closedBanner=document.getElementById('closed-banner');
       if (isAuctionSoon()) {
-        const diff = open - now;
-        const h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+        const diff=open-now; const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
         hEl.textContent=String(h).padStart(2,'0'); mEl.textContent=String(m).padStart(2,'0'); sEl.textContent=String(s).padStart(2,'0');
-        if(labelEl) labelEl.textContent='Opens In';
-        if(dotEl) { dotEl.classList.remove('closed'); dotEl.style.background='var(--gold)'; }
-        if(statusEl) statusEl.textContent='Opens Soon';
-        return;
+        if(labelEl)labelEl.textContent='Opens In'; if(dotEl){dotEl.classList.remove('closed');dotEl.style.background='var(--gold)';}
+        if(statusEl)statusEl.textContent='Opens Soon'; return;
       }
       if (isAuctionEnded()) {
-        if(digEl) digEl.style.display='none';
-        if(closedEl) closedEl.style.display='block';
-        if(dotEl) dotEl.classList.add('closed');
-        if(statusEl) statusEl.textContent='Auction Closed';
-        if(closedBanner) closedBanner.classList.add('visible');
-        return;
+        if(digEl)digEl.style.display='none'; if(closedEl)closedEl.style.display='block';
+        if(dotEl)dotEl.classList.add('closed'); if(statusEl)statusEl.textContent='Auction Closed';
+        if(closedBanner)closedBanner.classList.add('visible'); return;
       }
-      const diff = close - now;
-      const h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+      const diff=close-now; const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
       hEl.textContent=String(h).padStart(2,'0'); mEl.textContent=String(m).padStart(2,'0'); sEl.textContent=String(s).padStart(2,'0');
-      if(labelEl) labelEl.textContent='Closes In';
-      if(dotEl) { dotEl.classList.remove('closed'); dotEl.style.background='var(--green)'; }
-      if(statusEl) statusEl.textContent='Auction Live';
+      if(labelEl)labelEl.textContent='Closes In'; if(dotEl){dotEl.classList.remove('closed');dotEl.style.background='var(--green)';}
+      if(statusEl)statusEl.textContent='Auction Live';
     }
     setInterval(updateTimer, 1000);
     updateTimer();
 
-    // ── AUTH ─────────────────────────────────────────────────
+    // ── AUTH ──────────────────────────────────────────────────
     const SESSION_KEY = 'huskers_session';
     const GUEST_KEY   = 'huskers_guest';
-
-    function getSession() { try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch{ return null; } }
-    function getGuestData() { try { return JSON.parse(localStorage.getItem(GUEST_KEY)); } catch{ return null; } }
+    function getSession()   { try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch{ return null; } }
+    function getGuestData() { try { return JSON.parse(localStorage.getItem(GUEST_KEY)); }   catch{ return null; } }
 
     function setSession(user) { localStorage.setItem(SESSION_KEY, JSON.stringify(user)); updateAuthUI(); }
-    window.logout = function() { localStorage.removeItem(SESSION_KEY); updateAuthUI(); };
+
+    window.logout = function() {
+      localStorage.removeItem(SESSION_KEY);
+      closeModal('dashboard-modal');
+      updateAuthUI();
+    };
 
     function updateAuthUI() {
       const session = getSession();
-      const authBar  = document.getElementById('auth-bar');
-      const navBadge = document.getElementById('nav-user-badge');
-      const navLogout= document.getElementById('nav-logout');
-      const navName  = document.getElementById('nav-user-name');
+      const authBar   = document.getElementById('auth-bar');
+      const profMenu  = document.getElementById('profile-menu');
+      const navName   = document.getElementById('nav-user-name');
+      const ddName    = document.getElementById('dd-name');
+      const ddEmail   = document.getElementById('dd-email');
       if (session) {
         if(authBar)  authBar.style.display = 'none';
-        if(navBadge) navBadge.classList.add('visible');
+        if(profMenu) profMenu.classList.add('visible');
         if(navName)  navName.textContent = session.firstName + ' ' + session.lastName;
-        if(navLogout) navLogout.style.display = 'block';
+        if(ddName)   ddName.textContent  = session.firstName + ' ' + session.lastName;
+        if(ddEmail)  ddEmail.textContent = session.email;
       } else {
         if(authBar)  authBar.style.display = 'flex';
-        if(navBadge) navBadge.classList.remove('visible');
-        if(navLogout) navLogout.style.display = 'none';
+        if(profMenu) profMenu.classList.remove('visible');
       }
       renderItems();
     }
 
+    // Profile dropdown toggle
+    window.toggleProfileMenu = function() {
+      document.getElementById('profile-menu').classList.toggle('open');
+    };
+    // Close dropdown when clicking outside
+    document.addEventListener('click', e => {
+      const menu = document.getElementById('profile-menu');
+      if (menu && !menu.contains(e.target)) menu.classList.remove('open');
+    });
+
     window.handleLogin = async function() {
-      const email    = document.getElementById('login-email').value.trim();
-      const password = document.getElementById('login-password').value;
-      const errEl    = document.getElementById('login-error');
-      const btn      = document.getElementById('login-btn');
-
-      btn.disabled = true; btn.textContent = 'Signing In...';
-      errEl.classList.remove('visible');
-
+      const email=document.getElementById('login-email').value.trim();
+      const password=document.getElementById('login-password').value;
+      const errEl=document.getElementById('login-error');
+      const btn=document.getElementById('login-btn');
+      btn.disabled=true; btn.textContent='Signing In...'; errEl.classList.remove('visible');
       try {
-        const snap = await get(child(ref(db), 'auction/accounts/' + emailToKey(email)));
-        if (!snap.exists()) { errEl.classList.add('visible'); btn.disabled=false; btn.textContent='Sign In'; return; }
-        const user = snap.val();
-        if (user.password !== password) { errEl.classList.add('visible'); btn.disabled=false; btn.textContent='Sign In'; return; }
-        setSession(user);
+        const snap = await get(ref(db,'auction/accounts/'+emailToKey(email)));
+        if (!snap.exists()||snap.val().password!==password) { errEl.classList.add('visible'); btn.disabled=false; btn.textContent='Sign In'; return; }
+        setSession(snap.val());
         closeModal('auth-modal');
-        showToast('Welcome back, ' + user.firstName + '!', 'You\'re signed in and ready to bid.', false);
-      } catch(e) {
-        errEl.textContent = 'Connection error. Please try again.';
-        errEl.classList.add('visible');
-      }
+        showToast('Welcome back, '+snap.val().firstName+'!','You\'re signed in and ready to bid.',false);
+      } catch(e) { errEl.textContent='Connection error. Please try again.'; errEl.classList.add('visible'); }
       btn.disabled=false; btn.textContent='Sign In';
     };
 
     window.handleRegister = async function() {
-      const first   = document.getElementById('reg-first').value.trim();
-      const last    = document.getElementById('reg-last').value.trim();
-      const email   = document.getElementById('reg-email').value.trim();
-      const phone   = document.getElementById('reg-phone').value.trim();
-      const address = document.getElementById('reg-address').value.trim();
-      const company = document.getElementById('reg-company').value.trim();
-      const password= document.getElementById('reg-password').value;
-      const errEl   = document.getElementById('reg-error');
-      const btn     = document.getElementById('register-btn');
-
-      if (!first||!last||!email||!phone||!address||!password) {
-        errEl.textContent='Please fill out all required fields.'; errEl.classList.add('visible'); return;
-      }
-
-      btn.disabled=true; btn.textContent='Creating Account...';
-      errEl.classList.remove('visible');
-
+      const first=document.getElementById('reg-first').value.trim();
+      const last=document.getElementById('reg-last').value.trim();
+      const email=document.getElementById('reg-email').value.trim();
+      const phone=document.getElementById('reg-phone').value.trim();
+      const address=document.getElementById('reg-address').value.trim();
+      const company=document.getElementById('reg-company').value.trim();
+      const password=document.getElementById('reg-password').value;
+      const errEl=document.getElementById('reg-error');
+      const btn=document.getElementById('register-btn');
+      if (!first||!last||!email||!phone||!address||!password) { errEl.textContent='Please fill out all required fields.'; errEl.classList.add('visible'); return; }
+      btn.disabled=true; btn.textContent='Creating Account...'; errEl.classList.remove('visible');
       try {
-        const existing = await get(child(ref(db), 'auction/accounts/' + emailToKey(email)));
-        if (existing.exists()) {
-          errEl.textContent='An account with this email already exists.'; errEl.classList.add('visible');
-          btn.disabled=false; btn.textContent='Create Account & Bid'; return;
-        }
+        const existing = await get(ref(db,'auction/accounts/'+emailToKey(email)));
+        if (existing.exists()) { errEl.textContent='An account with this email already exists.'; errEl.classList.add('visible'); btn.disabled=false; btn.textContent='Create Account & Bid'; return; }
         const user = { firstName:first, lastName:last, email, phone, address, company, password };
-        await set(ref(db, 'auction/accounts/' + emailToKey(email)), user);
+        await set(ref(db,'auction/accounts/'+emailToKey(email)), user);
         setSession(user);
-        errEl.classList.remove('visible');
         closeModal('auth-modal');
-        showToast('Account Created!', 'Welcome, ' + first + '! You\'re ready to bid.', false);
-      } catch(e) {
-        errEl.textContent='Connection error. Please try again.'; errEl.classList.add('visible');
-      }
+        showToast('Account Created!','Welcome, '+first+'! You\'re ready to bid.',false);
+      } catch(e) { errEl.textContent='Connection error. Please try again.'; errEl.classList.add('visible'); }
       btn.disabled=false; btn.textContent='Create Account & Bid';
     };
 
-    // ── RENDER ITEMS ─────────────────────────────────────────
+    // ── RENDER ITEMS ──────────────────────────────────────────
     function renderItems() {
       const grid = document.getElementById('items-grid');
       if (!grid) return;
-      const auctionEnded = isAuctionEnded();
-      const auctionOpen  = isAuctionOpen();
-      const session = getSession();
-
+      const auctionEnded=isAuctionEnded(), auctionOpen=isAuctionOpen(), session=getSession();
       grid.innerHTML = AUCTION_ITEMS.map(item => {
-        const bids = getItemBids(item.id);
-        const topBid = getTopBid(item.id);
-        const currentPrice = getItemCurrentPrice(item);
-        const isWinner = auctionEnded && topBid && session && topBid.bidderEmail === session.email;
-
+        const bids=getItemBids(item.id), topBid=getTopBid(item.id), currentPrice=getItemCurrentPrice(item);
+        const isWinner=auctionEnded&&topBid&&session&&topBid.bidderEmail===session.email;
+        const isLeading=!auctionEnded&&topBid&&session&&topBid.bidderEmail===session.email;
         const imgContent = item.image
           ? `<img src="${item.image}" alt="${item.title}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'img-placeholder\\'>N</div>'">`
           : `<div class="img-placeholder">N</div>`;
-
         let bidBtn;
-        if (auctionEnded)      bidBtn = `<button class="btn-bid" disabled>Auction Closed</button>`;
-        else if (!auctionOpen) bidBtn = `<button class="btn-bid" disabled>Opens Soon</button>`;
-        else                   bidBtn = `<button class="btn-bid" onclick="window.openBidModal(${item.id})">Place Bid</button>`;
-
+        if (auctionEnded)      bidBtn=`<button class="btn-bid" disabled>Auction Closed</button>`;
+        else if (!auctionOpen) bidBtn=`<button class="btn-bid" disabled>Opens Soon</button>`;
+        else                   bidBtn=`<button class="btn-bid" onclick="window.openBidModal(${item.id})">Place Bid</button>`;
         return `
           <div class="item-card" id="card-${item.id}">
             <div class="item-card-img">${imgContent}<div class="item-num">#${item.id}</div></div>
@@ -686,225 +755,297 @@ const AUCTION_DEFAULTS = {
               <div class="item-desc">${item.desc}</div>
               <div class="item-bid-row">
                 <div>
-                  <div class="item-bid-label">${bids.length>0 ? 'Current Bid' : 'Starting Bid'}</div>
+                  <div class="item-bid-label">${bids.length>0?'Current Bid':'Starting Bid'}</div>
                   <div class="item-bid-amount" id="price-${item.id}">$${currentPrice.toLocaleString()}</div>
-                  <div class="item-bid-count" id="count-${item.id}">${bids.length} bid${bids.length!==1?'s':''}</div>
+                  <div class="item-bid-count">${bids.length} bid${bids.length!==1?'s':''}</div>
                 </div>
                 ${bidBtn}
               </div>
-              ${isWinner ? `<div class="item-winner-badge visible">🏆 You Won This Item!</div>` : ''}
+              ${isWinner   ? `<div class="item-winner-badge visible">🏆 You Won This Item!</div>` : ''}
+              ${isLeading  ? `<div class="item-winner-badge visible" style="background:rgba(34,197,94,0.8)">✓ You're Leading</div>` : ''}
             </div>
           </div>`;
       }).join('');
     }
 
-    // ── LIVE PULSE / FLASH ───────────────────────────────────
     function flashCard(itemId) {
-      const card = document.getElementById('card-' + itemId);
-      if (!card) return;
-      card.classList.remove('bid-flash');
-      void card.offsetWidth;
-      card.classList.add('bid-flash');
+      const card=document.getElementById('card-'+itemId);
+      if(!card)return; card.classList.remove('bid-flash'); void card.offsetWidth; card.classList.add('bid-flash');
     }
-
     let pulseTimeout;
-    function showLivePulse(itemTitle, amount) {
-      const el = document.getElementById('live-pulse');
-      document.getElementById('live-pulse-text').textContent =
-        'New bid: $' + Number(amount).toLocaleString() + ' on ' + itemTitle;
-      el.classList.add('show');
-      clearTimeout(pulseTimeout);
-      pulseTimeout = setTimeout(() => el.classList.remove('show'), 3500);
+    function showLivePulse(title, amount) {
+      const el=document.getElementById('live-pulse');
+      document.getElementById('live-pulse-text').textContent='New bid: $'+Number(amount).toLocaleString()+' on '+title;
+      el.classList.add('show'); clearTimeout(pulseTimeout); pulseTimeout=setTimeout(()=>el.classList.remove('show'),3500);
     }
 
-    // ── BID MODAL ────────────────────────────────────────────
+    // ── BID MODAL ─────────────────────────────────────────────
     window.openBidModal = function(itemId) {
-      if (!isAuctionOpen()) { showToast('Auction Not Active', 'Bidding is only available during the auction window.', true); return; }
-      activeBidItemId = itemId;
-      const item = AUCTION_ITEMS.find(i => i.id === itemId);
-      const currentPrice = getItemCurrentPrice(item);
-      const bids = getItemBids(itemId);
-      const minBid = currentPrice + 50;
-      const session = getSession();
-      const guestData = getGuestData();
-
-      document.getElementById('bid-modal-title').textContent = 'Item #' + item.id;
-      document.getElementById('bid-preview-name').textContent = item.title;
-      document.getElementById('bid-preview-current').textContent = '$' + currentPrice.toLocaleString();
-      document.getElementById('bid-preview-count').textContent = bids.length + ' bid' + (bids.length!==1?'s':'');
-      document.getElementById('bid-min-display').textContent = '$' + minBid.toLocaleString();
-      document.getElementById('bid-amount-input').value = '';
-      document.getElementById('bid-amount-input').min = minBid;
+      if (!isAuctionOpen()) { showToast('Auction Not Active','Bidding is only available during the auction window.',true); return; }
+      activeBidItemId=itemId;
+      const item=AUCTION_ITEMS.find(i=>i.id===itemId);
+      const currentPrice=getItemCurrentPrice(item), bids=getItemBids(itemId), minBid=currentPrice+50;
+      const session=getSession(), guestData=getGuestData();
+      document.getElementById('bid-modal-title').textContent='Item #'+item.id;
+      document.getElementById('bid-preview-name').textContent=item.title;
+      document.getElementById('bid-preview-current').textContent='$'+currentPrice.toLocaleString();
+      document.getElementById('bid-preview-count').textContent=bids.length+' bid'+(bids.length!==1?'s':'');
+      document.getElementById('bid-min-display').textContent='$'+minBid.toLocaleString();
+      document.getElementById('bid-amount-input').value='';
+      document.getElementById('bid-amount-input').min=minBid;
       document.getElementById('bid-error').classList.remove('visible');
-      document.getElementById('bid-error').textContent = '';
-
-      document.getElementById('bid-presets').innerHTML =
-        [minBid, minBid+50, minBid+150].map(amt =>
-          `<button class="bid-preset" onclick="selectPreset(${amt})">${'$'+amt.toLocaleString()}</button>`
-        ).join('');
-
-      const guestFieldsEl = document.getElementById('guest-fields');
-      const noteEl = document.getElementById('bid-modal-note');
+      document.getElementById('bid-presets').innerHTML=[minBid,minBid+50,minBid+150].map(amt=>`<button class="bid-preset" onclick="selectPreset(${amt})">${'$'+amt.toLocaleString()}</button>`).join('');
+      const guestFieldsEl=document.getElementById('guest-fields'), noteEl=document.getElementById('bid-modal-note');
       if (session) {
-        guestFieldsEl.style.display = 'none';
-        noteEl.textContent = 'Bidding as ' + session.firstName + ' ' + session.lastName + ' (' + session.email + ')';
+        guestFieldsEl.style.display='none';
+        noteEl.textContent='Bidding as '+session.firstName+' '+session.lastName+' ('+session.email+')';
       } else if (guestData) {
-        guestFieldsEl.style.display = 'none';
-        noteEl.innerHTML = 'Bidding as guest: <strong>' + guestData.firstName + ' ' + guestData.lastName + '</strong>. <a onclick="window.clearGuestAndShowFields()" style="color:var(--scarlet);cursor:pointer">Not you?</a>';
+        guestFieldsEl.style.display='none';
+        noteEl.innerHTML='Bidding as guest: <strong>'+guestData.firstName+' '+guestData.lastName+'</strong>. <a onclick="window.clearGuestAndShowFields()" style="color:var(--scarlet);cursor:pointer">Not you?</a>';
       } else {
-        guestFieldsEl.style.display = 'block';
-        noteEl.innerHTML = 'Want to save your bids? <a onclick="openModal(\'auth-modal\',\'register\')" style="color:var(--scarlet);cursor:pointer">Create a free account</a>';
+        guestFieldsEl.style.display='block';
+        noteEl.innerHTML='Want to save your bids? <a onclick="openModal(\'auth-modal\',\'register\')" style="color:var(--scarlet);cursor:pointer">Create a free account</a>';
       }
       openModal('bid-modal');
     };
-
     window.selectPreset = function(amt) {
-      document.querySelectorAll('.bid-preset').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.bid-preset').forEach(b=>b.classList.remove('active'));
       event.target.classList.add('active');
-      document.getElementById('bid-amount-input').value = amt;
+      document.getElementById('bid-amount-input').value=amt;
     };
-
     window.clearGuestAndShowFields = function() {
       localStorage.removeItem(GUEST_KEY);
-      document.getElementById('guest-fields').style.display = 'block';
-      document.getElementById('bid-modal-note').innerHTML =
-        'Want to save your info? <a onclick="openModal(\'auth-modal\',\'register\')" style="color:var(--scarlet);cursor:pointer">Create an account</a>';
+      document.getElementById('guest-fields').style.display='block';
+      document.getElementById('bid-modal-note').innerHTML='Want to save? <a onclick="openModal(\'auth-modal\',\'register\')" style="color:var(--scarlet);cursor:pointer">Create an account</a>';
     };
 
     window.submitBid = async function() {
-      const errEl = document.getElementById('bid-error');
-      const btn   = document.getElementById('submit-bid-btn');
+      const errEl=document.getElementById('bid-error'), btn=document.getElementById('submit-bid-btn');
       errEl.classList.remove('visible');
-
-      const item = AUCTION_ITEMS.find(i => i.id === activeBidItemId);
-      if (!item) return;
-
-      const currentPrice = getItemCurrentPrice(item);
-      const minBid  = currentPrice + 50;
-      const inputVal = parseFloat(document.getElementById('bid-amount-input').value);
-
-      if (isNaN(inputVal) || inputVal < minBid) {
-        errEl.textContent = 'Minimum bid is $' + minBid.toLocaleString() + ' (current + $50 increment).';
-        errEl.classList.add('visible'); return;
-      }
-
-      const session = getSession();
+      const item=AUCTION_ITEMS.find(i=>i.id===activeBidItemId);
+      const currentPrice=getItemCurrentPrice(item), minBid=currentPrice+50;
+      const inputVal=parseFloat(document.getElementById('bid-amount-input').value);
+      if (isNaN(inputVal)||inputVal<minBid) { errEl.textContent='Minimum bid is $'+minBid.toLocaleString()+' (current + $50 increment).'; errEl.classList.add('visible'); return; }
+      const session=getSession();
       let bidderInfo;
-
       if (session) {
-        bidderInfo = { firstName:session.firstName, lastName:session.lastName, email:session.email, phone:session.phone, address:session.address, company:session.company, type:'account' };
+        bidderInfo={firstName:session.firstName,lastName:session.lastName,email:session.email,phone:session.phone,address:session.address,company:session.company,type:'account'};
       } else {
-        const guestData = getGuestData();
-        if (guestData) {
-          bidderInfo = { ...guestData, type:'guest' };
-        } else {
-          const first=document.getElementById('g-first').value.trim();
-          const last =document.getElementById('g-last').value.trim();
-          const email=document.getElementById('g-email').value.trim();
-          const phone=document.getElementById('g-phone').value.trim();
-          const address=document.getElementById('g-address').value.trim();
-          const company=document.getElementById('g-company').value.trim();
-          if (!first||!last||!email||!phone||!address) {
-            errEl.textContent='Please fill out all required fields.'; errEl.classList.add('visible'); return;
-          }
-          bidderInfo = { firstName:first, lastName:last, email, phone, address, company, type:'guest' };
-          localStorage.setItem(GUEST_KEY, JSON.stringify(bidderInfo));
+        const guestData=getGuestData();
+        if (guestData) { bidderInfo={...guestData,type:'guest'}; }
+        else {
+          const first=document.getElementById('g-first').value.trim(), last=document.getElementById('g-last').value.trim();
+          const email=document.getElementById('g-email').value.trim(), phone=document.getElementById('g-phone').value.trim();
+          const address=document.getElementById('g-address').value.trim(), company=document.getElementById('g-company').value.trim();
+          if (!first||!last||!email||!phone||!address) { errEl.textContent='Please fill out all required fields.'; errEl.classList.add('visible'); return; }
+          bidderInfo={firstName:first,lastName:last,email,phone,address,company,type:'guest'};
+          localStorage.setItem(GUEST_KEY,JSON.stringify(bidderInfo));
         }
       }
-
-      // Re-check top bid live right before writing
-      const freshSnap = await get(ref(db, 'auction/bids'));
-      const freshBids = freshSnap.exists() ? Object.values(freshSnap.val()) : [];
-      const freshItemBids = freshBids.filter(b => b.itemId === activeBidItemId);
-      const freshTop = freshItemBids.length ? freshItemBids.reduce((m,b) => b.amount>m.amount?b:m, freshItemBids[0]) : null;
-
-      if (freshTop && freshTop.bidderEmail === bidderInfo.email) {
-        errEl.textContent = 'You already have the highest bid on this item!';
-        errEl.classList.add('visible'); return;
-      }
-      if (freshTop && inputVal < freshTop.amount + 50) {
-        errEl.textContent = 'Someone just outbid you. Minimum is now $' + (freshTop.amount+50).toLocaleString() + '.';
-        errEl.classList.add('visible'); return;
-      }
-
-      btn.disabled = true; btn.textContent = 'Placing Bid...';
-
+      // Live re-check
+      const freshSnap=await get(ref(db,'auction/bids'));
+      const freshBids=freshSnap.exists()?Object.values(freshSnap.val()):[];
+      const freshItemBids=freshBids.filter(b=>b.itemId===activeBidItemId);
+      const freshTop=freshItemBids.length?freshItemBids.reduce((m,b)=>b.amount>m.amount?b:m,freshItemBids[0]):null;
+      if (freshTop&&freshTop.bidderEmail===bidderInfo.email) { errEl.textContent='You already have the highest bid on this item!'; errEl.classList.add('visible'); return; }
+      if (freshTop&&inputVal<freshTop.amount+50) { errEl.textContent='Someone just outbid you. Minimum is now $'+(freshTop.amount+50).toLocaleString()+'.'; errEl.classList.add('visible'); return; }
+      btn.disabled=true; btn.textContent='Placing Bid...';
       try {
-        const newBid = {
-          itemId: activeBidItemId, itemTitle: item.title,
-          amount: inputVal,
-          bidderEmail: bidderInfo.email, bidderPhone: bidderInfo.phone || '',
-          bidderFirstName: bidderInfo.firstName, bidderLastName: bidderInfo.lastName,
-          bidderAddress: bidderInfo.address || '', bidderCompany: bidderInfo.company || '',
-          type: bidderInfo.type, timestamp: new Date().toISOString()
-        };
-        await push(ref(db, 'auction/bids'), newBid);
-
-        // Outbid notification
-        if (freshTop && freshTop.bidderEmail !== bidderInfo.email) {
-          sendOutbidNotification(freshTop, item, inputVal);
-        }
-
+        await push(ref(db,'auction/bids'),{itemId:activeBidItemId,itemTitle:item.title,amount:inputVal,bidderEmail:bidderInfo.email,bidderPhone:bidderInfo.phone||'',bidderFirstName:bidderInfo.firstName,bidderLastName:bidderInfo.lastName,bidderAddress:bidderInfo.address||'',bidderCompany:bidderInfo.company||'',type:bidderInfo.type,timestamp:new Date().toISOString()});
+        if (freshTop&&freshTop.bidderEmail!==bidderInfo.email) sendOutbidNotification(freshTop,item,inputVal);
         closeModal('bid-modal');
-        showToast('Bid Placed!', 'Your bid of $' + inputVal.toLocaleString() + ' on "' + item.title + '" is live.', false);
-      } catch(e) {
-        errEl.textContent = 'Failed to place bid. Please check your connection and try again.';
-        errEl.classList.add('visible');
-      }
+        showToast('Bid Placed!','Your bid of $'+inputVal.toLocaleString()+' on "'+item.title+'" is live.',false);
+      } catch(e) { errEl.textContent='Failed to place bid. Please check your connection and try again.'; errEl.classList.add('visible'); }
       btn.disabled=false; btn.textContent='Confirm Bid';
     };
 
-    // ── NOTIFICATIONS ────────────────────────────────────────
     async function sendOutbidNotification(outbidBid, item, newAmount) {
-      try {
-        await fetch('/api/notify-outbid', {
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ toEmail:outbidBid.bidderEmail, toPhone:outbidBid.bidderPhone, firstName:outbidBid.bidderFirstName, itemTitle:item.title, yourBid:outbidBid.amount, newHighBid:newAmount })
-        });
-      } catch(e) { console.log('Outbid notify (backend required):', e.message); }
+      try { await fetch('/api/notify-outbid',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({toEmail:outbidBid.bidderEmail,toPhone:outbidBid.bidderPhone,firstName:outbidBid.bidderFirstName,itemTitle:item.title,yourBid:outbidBid.amount,newHighBid:newAmount})}); } catch(e){}
     }
 
-    // ── MODAL HELPERS ────────────────────────────────────────
+    // ── USER DASHBOARD ────────────────────────────────────────
+    window.openDashboard = function(tab) {
+      document.getElementById('profile-menu').classList.remove('open');
+      switchDashTab(tab || 'bids');
+      if (tab==='settings') populateSettingsForm();
+      if (tab==='bids') renderUserBids();
+      openModal('dashboard-modal');
+    };
+
+    window.switchDashTab = function(tab) {
+      document.getElementById('dash-tab-bids').classList.toggle('active', tab==='bids');
+      document.getElementById('dash-tab-settings').classList.toggle('active', tab==='settings');
+      document.getElementById('dash-pane-bids').classList.toggle('active', tab==='bids');
+      document.getElementById('dash-pane-settings').classList.toggle('active', tab==='settings');
+      if (tab==='bids') renderUserBids();
+      if (tab==='settings') populateSettingsForm();
+    };
+
+    // BIDS PANE
+    function renderUserBids() {
+      const session=getSession();
+      const listEl=document.getElementById('user-bids-list');
+      if (!session||!listEl) return;
+
+      // Get all unique items this user has bid on, with their highest bid per item
+      const userBidMap = {};
+      Object.values(allBids).forEach(bid => {
+        if (bid.bidderEmail !== session.email) return;
+        if (!userBidMap[bid.itemId] || bid.amount > userBidMap[bid.itemId].amount) {
+          userBidMap[bid.itemId] = bid;
+        }
+      });
+
+      const userItems = Object.values(userBidMap).sort((a,b)=>b.amount-a.amount);
+
+      if (!userItems.length) {
+        listEl.innerHTML=`<div class="no-bids-msg"><strong>No Bids Yet</strong>Head back to the auction and place your first bid!</div>`;
+        return;
+      }
+
+      const auctionEnded=isAuctionEnded();
+      listEl.innerHTML = userItems.map(bid => {
+        const item=AUCTION_ITEMS.find(i=>i.id===bid.itemId);
+        const topBid=getTopBid(bid.itemId);
+        const isLeading = topBid && topBid.bidderEmail===session.email;
+        const totalBids = getItemBids(bid.itemId).length;
+        const d=new Date(bid.timestamp);
+        const timeStr=d.toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+
+        let statusHtml;
+        if (auctionEnded && isLeading) {
+          statusHtml=`<div class="user-bid-status winner"><div class="user-bid-status-dot"></div>🏆 Winner</div>`;
+        } else if (isLeading) {
+          statusHtml=`<div class="user-bid-status leading"><div class="user-bid-status-dot"></div>Leading — $${topBid.amount.toLocaleString()}</div>`;
+        } else {
+          statusHtml=`<div class="user-bid-status outbid"><div class="user-bid-status-dot"></div>Outbid — High: $${topBid?topBid.amount.toLocaleString():'—'}</div>`;
+        }
+
+        return `
+          <div class="user-bid-card">
+            <div class="user-bid-info">
+              <div class="user-bid-item-num">Item #${bid.itemId} · ${item?item.category:'—'}</div>
+              <div class="user-bid-item-title">${item?item.title:'Unknown Item'}</div>
+              <div class="user-bid-meta">Your bid placed ${timeStr} · ${totalBids} total bid${totalBids!==1?'s':''}</div>
+            </div>
+            <div class="user-bid-right">
+              <div class="user-bid-amount">$${bid.amount.toLocaleString()}</div>
+              ${statusHtml}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // SETTINGS PANE
+    function populateSettingsForm() {
+      const session=getSession();
+      if (!session) return;
+      document.getElementById('s-first').value   = session.firstName  || '';
+      document.getElementById('s-last').value    = session.lastName   || '';
+      document.getElementById('s-email').value   = session.email      || '';
+      document.getElementById('s-phone').value   = session.phone      || '';
+      document.getElementById('s-address').value = session.address    || '';
+      document.getElementById('s-company').value = session.company    || '';
+      // clear all error/success
+      ['s-info-error','s-info-success','s-pw-error','s-pw-success'].forEach(id => {
+        const el=document.getElementById(id); if(el){el.classList.remove('visible');}
+      });
+      ['s-pw-current','s-pw-new','s-pw-confirm'].forEach(id => {
+        const el=document.getElementById(id); if(el) el.value='';
+      });
+    }
+
+    window.saveAccountInfo = async function() {
+      const session=getSession();
+      if (!session) return;
+      const first   = document.getElementById('s-first').value.trim();
+      const last    = document.getElementById('s-last').value.trim();
+      const email   = document.getElementById('s-email').value.trim();
+      const phone   = document.getElementById('s-phone').value.trim();
+      const address = document.getElementById('s-address').value.trim();
+      const company = document.getElementById('s-company').value.trim();
+      const errEl   = document.getElementById('s-info-error');
+      const sucEl   = document.getElementById('s-info-success');
+      const btn     = document.getElementById('s-info-btn');
+      errEl.classList.remove('visible'); sucEl.classList.remove('visible');
+      if (!first||!last||!email||!phone||!address) { errEl.textContent='Please fill out all required fields.'; errEl.classList.add('visible'); return; }
+      btn.disabled=true; btn.textContent='Saving...';
+      try {
+        const updatedUser = { ...session, firstName:first, lastName:last, email:session.email, phone, address, company };
+        // Email is the key — don't allow email change to prevent orphaned records
+        if (email !== session.email) { errEl.textContent='Email cannot be changed. Contact Logan Holgorsen if needed.'; errEl.classList.add('visible'); btn.disabled=false; btn.textContent='Save Changes'; return; }
+        await set(ref(db,'auction/accounts/'+emailToKey(session.email)), updatedUser);
+        setSession(updatedUser);
+        sucEl.classList.add('visible');
+        showToast('Account Updated','Your information has been saved.',false);
+      } catch(e) { errEl.textContent='Could not save. Please try again.'; errEl.classList.add('visible'); }
+      btn.disabled=false; btn.textContent='Save Changes';
+    };
+
+    window.savePassword = async function() {
+      const session=getSession();
+      if (!session) return;
+      const current  = document.getElementById('s-pw-current').value;
+      const newPw    = document.getElementById('s-pw-new').value;
+      const confirm  = document.getElementById('s-pw-confirm').value;
+      const errEl    = document.getElementById('s-pw-error');
+      const sucEl    = document.getElementById('s-pw-success');
+      const btn      = document.getElementById('s-pw-btn');
+      errEl.classList.remove('visible'); sucEl.classList.remove('visible');
+      if (!current||!newPw||!confirm) { errEl.textContent='Please fill out all password fields.'; errEl.classList.add('visible'); return; }
+      if (current !== session.password) { errEl.textContent='Current password is incorrect.'; errEl.classList.add('visible'); return; }
+      if (newPw.length < 6) { errEl.textContent='New password must be at least 6 characters.'; errEl.classList.add('visible'); return; }
+      if (newPw !== confirm) { errEl.textContent='New passwords do not match.'; errEl.classList.add('visible'); return; }
+      btn.disabled=true; btn.textContent='Updating...';
+      try {
+        const updatedUser = { ...session, password: newPw };
+        await set(ref(db,'auction/accounts/'+emailToKey(session.email)), updatedUser);
+        setSession(updatedUser);
+        document.getElementById('s-pw-current').value='';
+        document.getElementById('s-pw-new').value='';
+        document.getElementById('s-pw-confirm').value='';
+        sucEl.classList.add('visible');
+        showToast('Password Updated','Your password has been changed.',false);
+      } catch(e) { errEl.textContent='Could not update password. Please try again.'; errEl.classList.add('visible'); }
+      btn.disabled=false; btn.textContent='Update Password';
+    };
+
+    // ── MODAL HELPERS ─────────────────────────────────────────
     window.openModal = function(id, tab) {
       document.getElementById(id).classList.add('open');
-      document.body.style.overflow = 'hidden';
-      if (tab && id === 'auth-modal') window.switchAuthTab(tab);
+      document.body.style.overflow='hidden';
+      if (tab&&id==='auth-modal') window.switchAuthTab(tab);
     };
     window.closeModal = function(id) {
       document.getElementById(id).classList.remove('open');
-      document.body.style.overflow = '';
+      document.body.style.overflow='';
     };
     window.switchAuthTab = function(tab) {
-      document.getElementById('tab-login').classList.toggle('active', tab==='login');
-      document.getElementById('tab-register').classList.toggle('active', tab==='register');
-      document.getElementById('pane-login').classList.toggle('active', tab==='login');
-      document.getElementById('pane-register').classList.toggle('active', tab==='register');
-      document.getElementById('auth-modal-title').textContent = tab==='login' ? 'Sign In' : 'Create Account';
+      document.getElementById('tab-login').classList.toggle('active',tab==='login');
+      document.getElementById('tab-register').classList.toggle('active',tab==='register');
+      document.getElementById('pane-login').classList.toggle('active',tab==='login');
+      document.getElementById('pane-register').classList.toggle('active',tab==='register');
+      document.getElementById('auth-modal-title').textContent=tab==='login'?'Sign In':'Create Account';
     };
     document.querySelectorAll('.modal-overlay').forEach(o => {
       o.addEventListener('click', e => { if(e.target===o) window.closeModal(o.id); });
     });
 
-    // ── TOAST ────────────────────────────────────────────────
+    // ── TOAST ─────────────────────────────────────────────────
     window.showToast = function(title, msg, isError) {
-      const el = document.getElementById('toast');
-      document.getElementById('toast-title').textContent = title;
-      document.getElementById('toast-msg').textContent = msg;
-      el.classList.toggle('error', !!isError);
+      const el=document.getElementById('toast');
+      document.getElementById('toast-title').textContent=title;
+      document.getElementById('toast-msg').textContent=msg;
+      el.classList.toggle('error',!!isError);
       el.classList.add('show');
-      setTimeout(() => el.classList.remove('show'), 4500);
+      setTimeout(()=>el.classList.remove('show'),4500);
     };
 
-    // ── START ────────────────────────────────────────────────
+    // ── START ─────────────────────────────────────────────────
     updateAuthUI();
     attachListeners();
-    if (window.location.hash === '#register') window.openModal('auth-modal','register');
-
-    // Timeout fallback: if Firebase hasn't responded in 8s, hide overlay
-    setTimeout(() => {
-      document.getElementById('db-connecting').classList.add('hidden');
-      if (!dbReady) document.getElementById('db-error-msg').classList.add('visible');
-    }, 8000);
+    if (window.location.hash==='#register') window.openModal('auth-modal','register');
+    setTimeout(()=>{ document.getElementById('db-connecting').classList.add('hidden'); if(!dbReady)document.getElementById('db-error-msg').classList.add('visible'); },8000);
   </script>
 </body>
 </html>
