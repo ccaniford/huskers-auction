@@ -865,7 +865,7 @@
       if (!topBid) { showToast('No Bids','No bids placed on this item.',true); return; }
       showToast('Sending...','Contacting winner via email + SMS.',false);
       try {
-        await fetch('/api/notify-winner',{
+        await fetch('https://huskers-auction-production.up.railway.app/api/notify-winner',{
           method:'POST', headers:{'Content-Type':'application/json'},
           body:JSON.stringify({toEmail:topBid.bidderEmail,toPhone:topBid.bidderPhone,firstName:topBid.bidderFirstName,lastName:topBid.bidderLastName,itemTitle:item.title,winningBid:topBid.amount})
         });
