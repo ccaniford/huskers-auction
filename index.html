@@ -708,7 +708,7 @@
         <div class="nav-card-content">
           <div class="nav-card-tag">Live Now · June 24</div>
           <div class="nav-card-title">Silent<br>Auction</div>
-          <div class="nav-card-desc">Bid on exclusive experiences, autographed memorabilia, and VIP access. 10 items available.</div>
+          <div class="nav-card-desc">Bid on exclusive experiences, autographed memorabilia, and VIP access. 12 items available.</div>
         </div>
       </a>
 
@@ -720,7 +720,7 @@
           <svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </div>
         <div class="nav-card-content">
-          <div class="nav-card-tag">2026 Season</div>
+          <div class="nav-card-tag">2025 Season</div>
           <div class="nav-card-title">Football<br>Schedule</div>
           <div class="nav-card-desc">Full season schedule including home, away, and Big Ten matchups. Go Big Red.</div>
         </div>
@@ -734,7 +734,7 @@
           <svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </div>
         <div class="nav-card-content">
-          <div class="nav-card-tag">2026 Roster</div>
+          <div class="nav-card-tag">2025 Roster</div>
           <div class="nav-card-title">Meet the<br>Huskers</div>
           <div class="nav-card-desc">Explore the full roster of Nebraska Cornhuskers under Head Coach Matt Rhule.</div>
         </div>
@@ -757,21 +757,7 @@
   </footer>
 
   <!-- FIREBASE -->
-  <script>
-const FIREBASE_CONFIG = {
-  apiKey:            "AIzaSyBgWf29g_2C1JcxuyKZ55qo0eImLiY7_9M",
-  authDomain:        "huskers-auction.firebaseapp.com",
-  databaseURL:       "https://huskers-auction-default-rtdb.firebaseio.com",
-  projectId:         "huskers-auction",
-  storageBucket:     "huskers-auction.firebasestorage.app",
-  messagingSenderId: "496839822385",
-  appId:             "1:496839822385:web:07dcdb3606d3998da69910"
-};
-const AUCTION_DEFAULTS = {
-  openTime:  '2026-06-22T00:00:00.000Z',
-  closeTime: '2026-06-24T20:00:00.000Z'
-};
-</script>
+  <script src="firebase-config.js"></script>
   <script type="module">
     import { initializeApp }                from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
     import { getDatabase, ref, onValue }    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
