@@ -521,22 +521,22 @@
   </div>
 
   <!-- ══ FIREBASE — inline config ══ -->
- <script>
-  const FIREBASE_CONFIG = {
-    apiKey:            "AIzaSyBgWf29g_2C1JcxuyKZ55qo0eImLiY7_9M",
-    authDomain:        "huskers-auction.firebaseapp.com",
-    databaseURL:       "https://huskers-auction-default-rtdb.firebaseio.com",
-    projectId:         "huskers-auction",
-    storageBucket:     "huskers-auction.firebasestorage.app",
-    messagingSenderId: "496839822385",
-    appId:             "1:496839822385:web:07dcdb3606d3998da69910"
-  };
-  const AUCTION_DEFAULTS = {
-    openTime:  '2026-06-23T22:00:00.000Z',
-    closeTime: '2026-06-24T20:00:00.000Z'
-  };
-  const RAILWAY_URL = 'https://huskers-auction-production.up.railway.app';
-</script>
+  <script>
+    const FIREBASE_CONFIG = {
+      apiKey:            "AIzaSyBgWf29g_2C1JcxuyKZ55qo0eImLiY7_9M",
+      authDomain:        "huskers-auction.firebaseapp.com",
+      databaseURL:       "https://huskers-auction-default-rtdb.firebaseio.com",
+      projectId:         "huskers-auction",
+      storageBucket:     "huskers-auction.firebasestorage.app",
+      messagingSenderId: "496839822385",
+      appId:             "1:496839822385:web:07dcdb3606d3998da69910"
+    };
+    const AUCTION_DEFAULTS = {
+      openTime:  '2026-06-24T14:00:00.000Z',
+      closeTime: '2026-06-24T20:00:00.000Z'
+    };
+    const RAILWAY_URL = 'https://huskers-auction-production.up.railway.app';
+  </script>
 
   <script type="module">
     import { initializeApp }                               from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
@@ -563,8 +563,8 @@
       { id:7,  category:'Game Day Experience', title:'Tunnel Walk Experience',                  startingBid:500, image:'https://huskers.com/images/2023/8/31/tunnel_walk.jpg',                            desc:'Walk the walk — literally. This exclusive package puts you and a guest inside the iconic Nebraska Tunnel Walk before kickoff. Feel the electricity of 90,000 fans building to a fever pitch as you walk the path from the locker room to the field alongside the team. One of the most electric pre-game experiences in all of college football.' },
       { id:8,  category:'Memorabilia',         title:'Autographed Football – Nebraska Players', startingBid:250, image:'https://huskers.com/images/2024/8/14/nebraska_football_2024.jpg',                 desc:'Own a piece of Husker history. This official NCAA football is autographed by multiple Nebraska Football players — a true collector\'s item. The ball comes authenticated with individual signatures and is display-ready. Show your Nebraska pride with one of the most treasured pieces of Husker memorabilia available.' },
       { id:9,  category:'Memorabilia',         title:'Autographed Football – Matt Rhule',       startingBid:400, image:'https://huskers.com/images/2023/12/5/matt_rhule_nebraska.jpg',                    desc:'A rare personal autograph from Head Coach Matt Rhule on an official NCAA football. Coach Rhule personally signed this ball — a collector\'s piece that captures a defining era of Nebraska Football. Authenticated and display-ready. The perfect centerpiece for any Husker fan\'s collection.' },
-      { id:10, category:'Behind the Scenes',   title:'Film Study with Coaches',                          startingBid:500, image:'https://huskers.com/images/2024/8/9/nebraska_football_practice_2024_0121.jpg', desc:'Pull up a chair in the same film room where Big Ten games are won. Spend time with Nebraska Football coaches reviewing actual game film — the formations, adjustments, and decisions that define modern college football. You'll walk away with an insider's understanding of how elite coaches break down opponents and prepare their players.' },
-      { id:11, category:'Behind the Scenes',   title:'Film Breakdown with GM Pat Stewart',               startingBid:500, image:'', desc:'An extraordinary behind-the-scenes opportunity to sit alongside Nebraska Football General Manager Pat Stewart as he breaks down actual recruit film. Gain a unique perspective on how the Husker staff evaluates talent, identifies key traits, and builds the roster that will define the program's future. This is a rare window into the recruiting process that very few people ever get to see.' },
+      { id:10, category:'Behind the Scenes',   title:'Film Study with Coaches',                          startingBid:500, image:'https://huskers.com/images/2024/8/9/nebraska_football_practice_2024_0121.jpg', desc:'Pull up a chair in the same film room where Big Ten games are won. Spend time with Nebraska Football coaches reviewing actual game film — the formations, adjustments, and decisions that define modern college football. You\'ll walk away with an insider\'s understanding of how elite coaches break down opponents and prepare their players.' },
+      { id:11, category:'Behind the Scenes',   title:'Film Breakdown with GM Pat Stewart',               startingBid:500, image:'', desc:'An extraordinary behind-the-scenes opportunity to sit alongside Nebraska Football General Manager Pat Stewart as he breaks down actual recruit film. Gain a unique perspective on how the Husker staff evaluates talent, identifies key traits, and builds the roster that will define the program\'s future. This is a rare window into the recruiting process that very few people ever get to see.' },
       { id:12, category:'VIP Experience',      title:'Sideline Passes – Washington Game',                startingBid:500, image:'', desc:'Experience the electricity of Memorial Stadium from the sideline. These two sideline passes for the Washington matchup put you right on the field during pregame warmups and give you an unobstructed view of every play. Feel the energy of the Husker faithful from the very best vantage point in the stadium. Passes include field access and a commemorative credential.' }
     ];
 
