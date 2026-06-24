@@ -234,7 +234,7 @@
         <div class="stat-card red"><div class="stat-card-label">Total Bids</div><div class="stat-card-val" id="s-total-bids">—</div><div class="stat-card-sub">Across all items</div></div>
         <div class="stat-card green"><div class="stat-card-label">Leading Bids Total</div><div class="stat-card-val" id="s-leader-val">—</div><div class="stat-card-sub">Sum of top bids per item</div></div>
         <div class="stat-card gold"><div class="stat-card-label">Unique Bidders</div><div class="stat-card-val" id="s-bidders">—</div><div class="stat-card-sub">Registered + guest</div></div>
-        <div class="stat-card blue"><div class="stat-card-label">Items With Bids</div><div class="stat-card-val" id="s-items-bid">—</div><div class="stat-card-sub">Of 10 total items</div></div>
+        <div class="stat-card blue"><div class="stat-card-label">Items With Bids</div><div class="stat-card-val" id="s-items-bid">—</div><div class="stat-card-sub">Of 12 total items</div></div>
       </div>
 
       <!-- AUCTION CONTROLS -->
@@ -432,7 +432,7 @@
     let managingItemId  = null; // tracks which item's bids modal is open
 
     // Starting bids — admin can override these per-session; persisted to Firebase
-    let startingBids = {1:750,2:500,3:300,4:300,5:300,6:750,7:500,8:250,9:400,10:500};
+    let startingBids = {1:750,2:500,3:300,4:300,5:300,6:750,7:500,8:250,9:400,10:500,11:500,12:500};
 
     const AUCTION_ITEMS = [
       {id:1,  title:'Sideline Passes – Ohio State Game'},
@@ -444,7 +444,9 @@
       {id:7,  title:'Tunnel Walk Experience'},
       {id:8,  title:'Autographed Football – Nebraska Players'},
       {id:9,  title:'Autographed Football – Matt Rhule'},
-      {id:10, title:'Film Study with Coaches'}
+      {id:10, title:'Film Study with Coaches', startingBid:500},
+      {id:11, title:'Film Breakdown with GM Pat Stewart', startingBid:500},
+      {id:12, title:'Sideline Passes – Washington Game', startingBid:500}
     ];
 
     // ── ADMIN AUTH ────────────────────────────────────────────
@@ -546,7 +548,7 @@
       document.getElementById('s-total-bids').textContent = bids.length;
       document.getElementById('s-leader-val').textContent = '$'+leaderVal.toLocaleString();
       document.getElementById('s-bidders').textContent    = uniqueEmails;
-      document.getElementById('s-items-bid').textContent  = itemsWithBids+'/10';
+      document.getElementById('s-items-bid').textContent  = itemsWithBids+'/12';
     }
 
     // ── CONTROL PANEL ─────────────────────────────────────────
