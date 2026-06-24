@@ -1,22 +1,11 @@
 /**
  * Nebraska Football Silent Auction — Notification Backend
- * =========================================================
- * Node.js / Express server
- * Handles SMS (Twilio) and Email (SendGrid) for:
- *   - Winner notifications (POST /api/notify-winner)
- *   - Outbid notifications (POST /api/notify-outbid)
- *
- * SETUP INSTRUCTIONS:
- * 1. npm install express twilio @sendgrid/mail cors dotenv
- * 2. Create a .env file with the variables listed below
- * 3. node notify.js   (or deploy to your hosting platform)
- * 4. Point auction.html's fetch calls to this server's URL
+ * Email only (SendGrid) — SMS removed
  */
 
 require('dotenv').config();
 const express = require('express');
 const cors    = require('cors');
-const twilio  = require('twilio');
 const sgMail  = require('@sendgrid/mail');
 
 const app = express();
@@ -28,33 +17,10 @@ app.use(cors({
 app.options('*', cors());
 app.use(express.json());
 
-// ── ENV VARS (put in .env file) ─────────────────────────────
-// TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-// TWILIO_AUTH_TOKEN=your_auth_token
-// TWILIO_FROM_NUMBER=+15551234567
-// SENDGRID_API_KEY=SG.xxxxxxxxxxxxxxxxxxxxxxxxxx
-// FROM_EMAIL=auction@huskers-football.com
-// FROM_NAME=Nebraska Football Auction
-// PORT=3000
-
-const twilioClient = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const FROM_EMAIL = process.env.FROM_EMAIL || 'auction@huskers-football.com';
 const FROM_NAME  = process.env.FROM_NAME  || 'Nebraska Football Auction';
-const FROM_PHONE = process.env.TWILIO_FROM_NUMBER;
-
-// ── HELPER: Send SMS ────────────────────────────────────────
-async function sendSMS(to, body) {
-  if (!to || !FROM_PHONE) return;
-  // Normalize phone — ensure it starts with +1
-  const normalized = to.replace(/\D/g, '');
-  const e164 = normalized.startsWith('1') ? '+' + normalized : '+1' + normalized;
-  return twilioClient.messages.create({ body, from: FROM_PHONE, to: e164 });
-}
 
 // ── HELPER: Send Email ──────────────────────────────────────
 async function sendEmail(to, subject, htmlBody) {
@@ -87,7 +53,7 @@ function winnerEmailHtml(firstName, lastName, itemTitle, winningBid) {
     .item-box .item-title { color: #E41C38; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
     .item-box .item-name { color: #fff; font-size: 18px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
     .item-box .item-bid { color: #D4A843; font-size: 24px; font-weight: 800; }
-    .payment-box { background: rgba(228,28,56,0.1); border: 1px solid rgba(228,28,56,0.3); padding: 20px 24px; margin: 24px 0; border-radius: 2px; }
+    .payment-box { background: rgba(228,28,56,0.1); border: 1px solid rgba(228,28,56,0.3); padding: 20px 24px; margin: 24px 0; }
     .payment-box h3 { color: #E41C38; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
     .payment-box p { color: rgba(255,255,255,0.7); font-size: 13px; line-height: 1.7; margin: 0; }
     .payment-box strong { color: #fff; }
@@ -127,8 +93,7 @@ function winnerEmailHtml(firstName, lastName, itemTitle, winningBid) {
     </div>
   </div>
 </body>
-</html>
-  `;
+</html>`;
 }
 
 // ── OUTBID EMAIL TEMPLATE ───────────────────────────────────
@@ -183,7 +148,7 @@ function outbidEmailHtml(firstName, itemTitle, yourBid, newHighBid) {
           <div class="amount">$${Number(newHighBid).toLocaleString()}</div>
         </div>
       </div>
-      <a href="https://your-auction-url.com/auction.html" class="cta">Place a Higher Bid →</a>
+      <a href="https://ccaniford.github.io/huskers-auction/auction.html" class="cta">Place a Higher Bid →</a>
       <p style="font-size:12px">The auction closes at 3:00 PM CT on June 24, 2026. Act fast!</p>
     </div>
     <div class="footer">
@@ -192,29 +157,21 @@ function outbidEmailHtml(firstName, itemTitle, yourBid, newHighBid) {
     </div>
   </div>
 </body>
-</html>
-  `;
+</html>`;
 }
 
 // ═══════════════════════════════════════════════════════════
 //  ROUTES
 // ═══════════════════════════════════════════════════════════
 
-/**
- * POST /api/notify-winner
- * Body: { toEmail, toPhone, firstName, lastName, itemTitle, winningBid }
- */
+// POST /api/notify-winner
 app.post('/api/notify-winner', async (req, res) => {
-  const { toEmail, toPhone, firstName, lastName, itemTitle, winningBid } = req.body;
-
+  const { toEmail, firstName, lastName, itemTitle, winningBid } = req.body;
   if (!toEmail || !firstName || !itemTitle || !winningBid) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
-
-  const results = { email: null, sms: null };
+  const results = { email: null };
   const errors  = [];
-
-  // Send Email
   try {
     await sendEmail(
       toEmail,
@@ -226,42 +183,18 @@ app.post('/api/notify-winner', async (req, res) => {
     errors.push('Email failed: ' + e.message);
     results.email = 'failed';
   }
-
-  // Send SMS
-  try {
-    const smsBody =
-      `🏈 Congratulations ${firstName}! You won "${itemTitle}" with a bid of $${Number(winningBid).toLocaleString()} ` +
-      `in the Nebraska Football Silent Auction. ` +
-      `Payment by check to Matt Rhule Football Camps LLC. ` +
-      `Contact Logan Holgorsen: (531) 857-2638. Go Big Red!`;
-    await sendSMS(toPhone, smsBody);
-    results.sms = 'sent';
-  } catch (e) {
-    errors.push('SMS failed: ' + e.message);
-    results.sms = 'failed';
-  }
-
-  console.log('[WINNER NOTIFY]', { toEmail, toPhone, itemTitle, winningBid, results });
-
-  res.json({ success: errors.length < 2, results, errors });
+  console.log('[WINNER NOTIFY]', { toEmail, itemTitle, winningBid, results });
+  res.json({ success: results.email === 'sent', results, errors });
 });
 
-
-/**
- * POST /api/notify-outbid
- * Body: { toEmail, toPhone, firstName, itemTitle, yourBid, newHighBid }
- */
+// POST /api/notify-outbid
 app.post('/api/notify-outbid', async (req, res) => {
-  const { toEmail, toPhone, firstName, itemTitle, yourBid, newHighBid } = req.body;
-
+  const { toEmail, firstName, itemTitle, yourBid, newHighBid } = req.body;
   if (!toEmail || !firstName || !itemTitle) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
-
-  const results = { email: null, sms: null };
+  const results = { email: null };
   const errors  = [];
-
-  // Send Email
   try {
     await sendEmail(
       toEmail,
@@ -273,40 +206,22 @@ app.post('/api/notify-outbid', async (req, res) => {
     errors.push('Email failed: ' + e.message);
     results.email = 'failed';
   }
-
-  // Send SMS
-  try {
-    const smsBody =
-      `Nebraska Football Auction: You've been outbid on "${itemTitle}", ${firstName}. ` +
-      `New high bid: $${Number(newHighBid).toLocaleString()}. ` +
-      `Bid again at your auction link before 3pm CT on June 24!`;
-    await sendSMS(toPhone, smsBody);
-    results.sms = 'sent';
-  } catch (e) {
-    errors.push('SMS failed: ' + e.message);
-    results.sms = 'failed';
-  }
-
   console.log('[OUTBID NOTIFY]', { toEmail, itemTitle, yourBid, newHighBid, results });
-
-  res.json({ success: errors.length < 2, results, errors });
+  res.json({ success: results.email === 'sent', results, errors });
 });
 
-// ── HEALTH CHECK ────────────────────────────────────────────
+// Health check
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
-    twilio: !!process.env.TWILIO_ACCOUNT_SID,
     sendgrid: !!process.env.SENDGRID_API_KEY,
     timestamp: new Date().toISOString()
   });
 });
 
-// ── START ───────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`\n🌽 Nebraska Football Auction — Notify Server`);
   console.log(`   Listening on port ${PORT}`);
-  console.log(`   Twilio: ${process.env.TWILIO_ACCOUNT_SID ? '✓ Configured' : '✗ Missing env vars'}`);
   console.log(`   SendGrid: ${process.env.SENDGRID_API_KEY ? '✓ Configured' : '✗ Missing env vars'}\n`);
 });
